@@ -1,5 +1,7 @@
 {
   "name": "iSchedule",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

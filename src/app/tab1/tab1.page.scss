@@ -1,4 +1,28 @@
 .welcome-card ion-img {
   max-height: 35vh;
+  min-height: 20vh;
   overflow: hidden;
 }
+#headerImg3 {
+  right: 0px;
+  bottom: 0px;
+  width: 370px;
+  height: auto;
+  float: right;
+}
+#headerImg2 {
+  position: absolute;
+  top: 10px;
+  width: 500px;
+  left: 200px;
+  height: auto;
+}
+#home-content {
+  clear: both;
+}
+// #headerImg1 {
+//   bottom: 0px;
+//   height: 100px;
+//   left: 0px;
+//   height: auto;
+// }

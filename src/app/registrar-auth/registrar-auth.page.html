@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>registrar-auth</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-list>
+      <form
+        #recruiterAuthForm="ngForm" 
+        (ngSubmit)="login(recruiterAuthForm.value)">
+          <ion-item>
+            <ion-label fixed>Username</ion-label>
+            <ion-input type="text" name="userName" ngModel></ion-input>
+          </ion-item>
+    
+          <ion-item>
+            <ion-label fixed>Password</ion-label>
+            <ion-input type="password" name="userPassword" ngModel></ion-input>
+          </ion-item>
+        
+        <div padding>
+          <ion-button type="submit" color="primary" block>Sign In</ion-button>
+        </div>
+        <ion-item class="loginError" padding *ngIf="error">{{ error }}</ion-item>
+      </form>
+    </ion-list>    
+</ion-content>

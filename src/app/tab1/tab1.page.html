@@ -8,12 +8,19 @@
 
 <ion-content>
     <ion-card class="welcome-card">
-      <ion-img src="/assets/shapes.svg"></ion-img>
+      <!-- <ion-img src="/assets/shapes.svg"></ion-img> -->
+      <ion-img id="headerImg3" src="/assets/bg-menu-drop-t.jpg"></ion-img>
+      <!-- <ion-img id="headerImg1" src="/assets/texture04.png"></ion-img> -->
+      <ion-img id="headerImg2" src="/assets/texture03.png"></ion-img>
+      
       <ion-card-header>
         <ion-card-subtitle>Get Started</ion-card-subtitle>
-        <ion-card-title>Welcome to Ionic</ion-card-title>
+        <ion-card-title>Welcome to Nossi Scheduler</ion-card-title>
       </ion-card-header>
-      <ion-card-content>
+      <ion-card-content id="home-content">
+          <ion-button href="/registrar-auth" routerDirection="forward" expand="block" fill="outline">
+            Login
+          </ion-button>
         <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p>
       </ion-card-content>
     </ion-card>
