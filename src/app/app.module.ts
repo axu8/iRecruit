@@ -14,17 +14,28 @@ import { Data } from './providers/data';
 import { AuthenticationService } from './providers/authentication-service';
 // import { SubmitProspectService } from './providers/submit-prospect-service';
 import { StorageService } from './providers/storage-service';
-
+import { MainSidebarComponent } from './main-sidebar/main-sidebar.component';
+import { BrochureSidebarComponent } from './brochure-sidebar/brochure-sidebar.component';
+import { StudentFormPageModule } from './student-form/student-form.module';
+import { FormGroup, ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    MainSidebarComponent,
+    BrochureSidebarComponent
+  ],
   entryComponents: [],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 
     AppRoutingModule,
     HttpClientModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    StudentFormPageModule,
+    FormsModule,
+    ReactiveFormsModule,
+    
   ],
   providers: [
     StatusBar,

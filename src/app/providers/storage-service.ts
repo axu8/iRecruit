@@ -27,15 +27,17 @@ export class StorageService {
   	this.storage.set("username", userNameValue);
   }
 
-
   getUserToken(){
-  	this.storage.get("token").then((val) => {
-  		console.log("val is", val);
-  		this.tokenVal = val;
-  	});
-  	return this.tokenVal;
-  	//console.log("Token is :" + this.token);
+  	return this.storage.get("token").then(val => val);
   }
+  // getUserToken(){
+  // 	this.storage.get("token").then((val) => {
+  // 		console.log("val is", val);
+  // 		this.tokenVal = val;
+  // 	});
+  // 	return this.tokenVal;
+  // 	//console.log("Token is :" + this.token);
+  // }
 
   removeStoredUser(){
   	this.storage.remove("token");

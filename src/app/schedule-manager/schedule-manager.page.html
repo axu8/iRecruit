@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Schedule Manager</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+
+  <div class="centered-content">
+    <ion-chip outline>
+      <ion-label color="primary">You do not currently have any schedule data</ion-label>
+    </ion-chip>
+    <br>
+    <ion-button (click)="presentActionSheet()">Add Students to Schedule</ion-button>
+  </div>
+    
+</ion-content>
+
+
+
+<ion-footer>
+  <ion-toolbar>
+    <!-- <ion-title>Footer</ion-title> -->
+    <ion-buttons slot="end">
+      <ion-button (click)="presentActionSheet()">
+          <ion-icon name="more"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-footer>

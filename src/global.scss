@@ -9,3 +9,28 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+ion-header, 
+ion-toolbar,
+ion-title {
+    color: #FFFFFF
+}
+.title-centered .toolbar-content {
+    order: 4;
+    // Make sure the toolbar buttons are above the title or they can't be tapped!
+    z-index: -1;
+  }
+  
+  .title-centered ion-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 50px 1px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .title-centered .toolbar-title {
+    text-align: center;
+    padding: 0;
+  }

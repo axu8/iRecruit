@@ -8,6 +8,38 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-button (click)="retrieveCurrentStudents()">Get All Students Courses</ion-button>
+     
+    <h1>{{ apiString }}</h1>
+    <ion-item>
+      <ion-label position="floating">Test API String</ion-label>
+      <ion-input [(ngModel)]="apiString"></ion-input>
+    </ion-item>
+    <ion-button (click)="testAPI()">Get All Students Courses</ion-button>
+    <ion-button (click)="goto('/schedule-manager')" color="primary" fill="outline">
+      <ion-icon slot="start" name="star"></ion-icon>
+      Create Schedule
+    </ion-button>
+   
+
+    <!-- <ion-slides pager="true" [options]="slideOpts">
+      <ion-slide>
+        <h1>Slide 1</h1>
+      </ion-slide>
+      <ion-slide>
+        <h1>Slide 2</h1>
+      </ion-slide>
+      <ion-slide>
+        <h1>Slide 3</h1>
+      </ion-slide>
+    </ion-slides> -->
 </ion-content>
+<ion-content></ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+      <button ion-button>Upload</button>
+      <button ion-button>Upload</button>
+      <button ion-button>Upload</button>
+  </ion-toolbar>
+</ion-footer>
 

@@ -11,13 +11,13 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 export class AppComponent {
   public sideMenuPages = [
     {
-      title: 'Login',
+      title: 'Recruiters',
       url: '/registrar-auth',
-      icon: 'home'
+      icon: 'list'
     },
     {
-      title: 'List',
-      url: '/list',
+      title: 'Brochure',
+      url: '/brochureHome',
       icon: 'list'
     }
   ];
