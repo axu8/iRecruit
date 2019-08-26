@@ -8,13 +8,22 @@ import { IonicModule } from '@ionic/angular';
 
 //import { StudentFormPage } from './student-form.page';
 import { MainFormComponent } from './main-form/main-form.component';
+import { KeypadComponent } from '../keypad/keypad.component';
+// import { PinpadPage } from '../pinpad/pinpad.page';
+// import { PinpadPage } from '../pinpad/pinpad.page';
+import { PinpadComponent } from './pinpad/pinpad.component';
+// import { PinpadPageModule } from '../pinpad/pinpad.module';
 
 
 const routes: Routes = [
   {
     path: '',
     component: MainFormComponent
-  }
+  },
+  // {
+  //   path: 'home',
+  //   redirectTo: ''
+  // }
 ];
 
 @NgModule({
@@ -23,11 +32,20 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    // PinpadPageModule
+  ],
+  bootstrap: [
+    
   ],
   declarations: [
     //StudentFormPage,
-    MainFormComponent
+    MainFormComponent,
+    //KeypadComponent
+    PinpadComponent
+  ],
+  entryComponents: [
+    PinpadComponent
   ]
 })
 export class StudentFormPageModule {}

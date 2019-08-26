@@ -5,6 +5,12 @@ import { ViewChild } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
 import { Data } from '../../providers/data';
 import { Prospect } from '../prospect-model';
+import { AlertController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { PinpadComponent } from '../pinpad/pinpad.component';
+// import { KeypadComponent } from '../../keypad/keypad.component';
+//import { PinpadPage } from '../../pinpad/pinpad.page';
+// import { PinpadPageModule } from '../../pinpad/pinpad.module';
 
 
 
@@ -26,14 +32,19 @@ export class MainFormComponent implements OnInit {
   
   @ViewChild('signupSlider') signupSlider;
 
-  //Morony
+  
 
 	public slideOneForm: FormGroup;
-  public slideTwoForm: FormGroup;
-  public slideThreeForm: FormGroup;
+	public slideTwoForm: FormGroup;
+	public slideThreeForm: FormGroup;
+	public slideFourForm: FormGroup;
+	// public slideFiveForm: FormGroup;
 	public submitAttempt: boolean = false;
-  degreeType = "bga";
+	degreeType = "bga";
 	prospectForm: FormGroup;
+	segment;
+	slideBeginning;
+	slideEnd;
 
   // @ViewChild(IonSlides) slides: IonSlides;
   @ViewChild('slides') slides;
@@ -60,7 +71,9 @@ export class MainFormComponent implements OnInit {
 		//this.navCtrl.setRoot(Home);
 	}
   constructor( 
-    //public navCtrl: NavController, 
+	//public navCtrl: NavController, 
+	public modalController: ModalController,
+	public alertController: AlertController,
     public _data:Data, 
     public formBuilder: FormBuilder, 
     public storageService:StorageService ) {
@@ -89,19 +102,48 @@ export class MainFormComponent implements OnInit {
       // photoAS: this.formBuilder.control(null),
       // uxuiCT: this.formBuilder.control(null),
       // photoCT: this.formBuilder.control(null)
-    });
+	});
+	this.slideFourForm = formBuilder.group({
+		highSchool: [''],
+		gradYear: [''],
+		parentName: [''],
+		parentPhone: [''], //home phone
+		instagram: [''], //custom notes
+		recruiterNotes: [''] //custom notes
+	});
+	// this.slideFiveForm = formBuilder.group({
+	// 	address1: [''],
+	// 	address2: [''],
+	// 	city: [''],
+	// 	state: [''],
+	// 	zip: ['']
+	// });
   }
   slideToNext() {
 		//this.slider.getSlider().slideNext(); // also not working
 		this.slides.lockSwipes(false);
 	    this.slides.slideNext();
-	    this.slides.lockSwipes(true);
+		this.slides.lockSwipes(true);
+		//console.log( this.slides.nativeElement.isBeginning() );
+		this.slides.isBeginning().then(data => {
+			this.slideBeginning = data;
+		});
+		this.slides.isEnd().then(data => {
+			this.slideEnd = data;
+		});
+		console.log(this.slideEnd, this.slideBeginning);
 	}
 	slideToPrev() {
 		//this.slider.getSlider().slideNext(); // also not working
 		this.slides.lockSwipes(false);
 		this.slides.slidePrev(); // not working
 		this.slides.lockSwipes(true);
+		this.slides.isBeginning().then(data => {
+			this.slideBeginning = data;
+		});
+		this.slides.isEnd().then(data => {
+			this.slideEnd = data;
+		});
 	}
 	buildProspectForm() {
 		this.prospectForm = this.formBuilder.group({
@@ -130,7 +172,11 @@ export class MainFormComponent implements OnInit {
 	}
 	onResetForm() {
 
-		this.prospectForm.reset();
+		// this.prospectForm.reset();
+		this.slideOneForm.reset();
+		this.slideTwoForm.reset();
+		this.slideThreeForm.reset();
+		this.slideFourForm.reset();
 		this.slides.lockSwipes(false);
 		this.slides.slideTo(0,500);
 		this.slides.lockSwipes(true);
@@ -146,8 +192,38 @@ export class MainFormComponent implements OnInit {
 		//this.storageService.test();
 	} 
 
-
-  ngOnInit() {}
+	async presentAlert() {
+		const alert = await this.alertController.create({
+		  header: 'Thanks for Requesting Info!',
+		//   subHeader: 'We\'ll be in touch shortly.',
+		  message: 'Please hand the tablet back to your recruiter for verification.',
+		  buttons: [
+			  {
+				text: 'OK',
+				handler: () => {
+					this.presentModal();
+				}
+			  }
+		  ]
+		});
+	
+		await alert.present();
+	}
+	async presentModal() {
+		console.log("MODAL!!");
+		const modal = await this.modalController.create({
+			component: PinpadComponent
+		});
+		return await modal.present();
+	}
+	ngOnInit() {
+		this.slides.isBeginning().then(data => {
+			this.slideBeginning = data;
+		});
+		this.slides.isEnd().then(data => {
+			this.slideEnd = data;
+		});
+	}
 
 }
 

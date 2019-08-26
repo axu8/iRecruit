@@ -4,6 +4,7 @@ import { StorageService } from "../providers/storage-service";
 import { ViewChild } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
 import { Data } from '../providers/data';
+
 // import { Prospect } from './prospect-model';
 
 

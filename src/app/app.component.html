@@ -7,7 +7,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content>
-        <ion-list>
+        <ion-list *ngIf="recruiterLoggedIn">
           <ion-menu-toggle auto-hide="false" *ngFor="let p of sideMenuPages">
             <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>
@@ -16,6 +16,68 @@
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
+        </ion-list>
+        <ion-list *ngIf="!recruiterLoggedIn">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="goHome()">
+              <!-- <ion-icon slot="start" [name]="p.icon"></ion-icon> -->
+              <ion-label>Home</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <!-- <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="showPage(13)">
+              <ion-label>Welcome</ion-label>
+            </ion-item>
+          </ion-menu-toggle> -->
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="showPage(13)">
+              <!-- <ion-icon slot="start" [name]="p.icon"></ion-icon> -->
+              <ion-label>Culture</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="gotoPage('students/student-form')">
+              <!-- <ion-icon slot="start" [name]="p.icon"></ion-icon> -->
+              <ion-label>Apply</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="showDegreePage(410,275,245)">
+              <!-- <ion-icon slot="start" [name]="p.icon"></ion-icon> -->
+              <ion-label>Illustration</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="showDegreePage(435,439,437)">
+              <!-- <ion-icon slot="start" [name]="p.icon"></ion-icon> -->
+              <ion-label>Web Design</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="showDegreePage(421,280,249)">
+              <!-- <ion-icon slot="start" [name]="p.icon"></ion-icon> -->
+              <ion-label>Videography</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="showDegreePage(420,272,243)">
+              <!-- <ion-icon slot="start" [name]="p.icon"></ion-icon> -->
+              <ion-label>Graphic Design</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item [routerDirection]="'root'" (click)="showDegreePage(414,277,263)">
+              <!-- <ion-icon slot="start" [name]="p.icon"></ion-icon> -->
+              <ion-label>Photography</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <!-- <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
+            <ion-item [routerDirection]="'root'" (click)="showPage(page.id)">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label [innerHTML]="page.title.rendered">
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle> -->
         </ion-list>
       </ion-content>
     </ion-menu>

@@ -18,6 +18,7 @@ import { MainSidebarComponent } from './main-sidebar/main-sidebar.component';
 import { BrochureSidebarComponent } from './brochure-sidebar/brochure-sidebar.component';
 import { StudentFormPageModule } from './student-form/student-form.module';
 import { FormGroup, ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { PinpadPageModule } from './pinpad/pinpad.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { FormGroup, ReactiveFormsModule, FormsModule, FormBuilder } from '@angul
     StudentFormPageModule,
     FormsModule,
     ReactiveFormsModule,
-    
+    PinpadPageModule
   ],
   providers: [
     StatusBar,

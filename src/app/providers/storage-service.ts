@@ -26,7 +26,18 @@ export class StorageService {
   setUserName(userNameValue){
   	this.storage.set("username", userNameValue);
   }
-
+  setCampaign(campaignValue){
+  	this.storage.set("campaign", campaignValue);
+  }
+  getCampaign(){
+  	return this.storage.get("campaign").then(val => val);
+  }
+  setUserPass(passValue){
+  	this.storage.set("pass", passValue);
+  }
+  getUserPass(){
+  	return this.storage.get("pass").then(val => val);
+  }
   getUserToken(){
   	return this.storage.get("token").then(val => val);
   }
@@ -60,7 +71,14 @@ export class StorageService {
       
     });
   }
-
+  setProspectProgress(prospectProgress){
+    this.storage.set("prospectProgress", prospectProgress).then(() => {
+      // this.newProspectsArray = [];
+      // this.storage.("newProspects").then((pr) => {
+      //   console.log(pr);
+      // });
+    });
+  }
   setNewProspect(np){
     //console.log("NP is: " + JSON.stringify(np));
     //this.newProspectsArray.push(np);

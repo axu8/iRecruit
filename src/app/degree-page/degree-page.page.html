@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ degreeData?.title.rendered }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+  <!-- Tabs Stuff -->
+  <ion-segment [(ngModel)]="tabSelection">
+    <ion-segment-button value="about" (click)="showTab()">
+      About
+      <ion-icon name="list"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="gallery" (click)="showTab()">
+      Gallery
+      <ion-icon name="ios-checkmark"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="curriculum" (click)="showTab()">
+      Curriculum
+      <ion-icon name="close"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+    
+    
+    <div [ngSwitch]="tabSelection">
+    
+      <ion-list *ngSwitchCase="'about'">
+          <h1>{{ degreeData?.title.rendered }}</h1>
+          <div [innerHTML]="degreeData?.content.rendered"></div>
+      </ion-list>
+      
+      <ion-list *ngSwitchCase="'gallery'">
+        <div class="video" *ngIf="pageID == 280">
+          <h1 [innerHTML]="galleryData?.title.rendered"></h1>
+          <ion-slides pager="true" [options]="slideOpts">
+            <ion-slide [style.justify-content]="'flex-start'" *ngFor="let vid of galleryImageURLs">
+                <video controls [src]="vid"></video>
+            </ion-slide>
+          </ion-slides>
+        </div>
+        <div *ngIf="pageID != 280">
+          <h1 [innerHTML]="galleryData?.title.rendered"></h1>
+          <ion-slides pager="true" [options]="slideOpts">
+            <ion-slide *ngFor="let img of galleryImageURLs">
+              <img [src]="img" alt="">
+            </ion-slide>
+          </ion-slides>
+        </div>
+      </ion-list>
+      <ion-list *ngSwitchCase="'curriculum'">
+        <ion-item>
+          <h1>{{ curriculumData?.title.rendered }}</h1>
+          <div [innerHTML]="curriculumData?.content.rendered"></div>
+        </ion-item>
+      </ion-list>
+    
+    </div>
+    <!-- End Tabs Stuff -->
+</ion-content>

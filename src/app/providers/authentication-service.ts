@@ -26,14 +26,22 @@ export class AuthenticationService {
     
     login(username: string, password: string): Observable<any> {
         this.creds = {
+            /*
+            //Staging
             "ClientId":"1DB3C50D-C215-4463-A2A8-7141B5200561",
             "PartnerCode":"VMDSDR",
             "PartnerKey":"vmdsdrrmrejykpgzeuoe",
             "Password":password,
             "Username":username
+            */
+           "ClientId":"2FE0CFAB-7CF9-4723-A4E4-79269116E119",
+           "PartnerCode":"USVPPK",
+           "PartnerKey":"usvppkvrulmqdfezaijz",
+           "Password":password,
+           "Username":username
         }
         this.body = JSON.stringify(this.creds);
-        return this.http.post('http://topx.topschoolstage.com/Security/partnerlogin', this.body, {headers: this.headers})
+        return this.http.post('http://topx.topschoollive.com/Security/partnerlogin', this.body, {headers: this.headers})
             .map((response: Response) => {
                 console.log(response);
                 // login successful if there's a jwt token in the response
@@ -48,6 +56,7 @@ export class AuthenticationService {
                         //localStorage.setItem('currentUser', JSON.stringify({ username: username, token: token }));
                         this.storageService.setUserToken(token);
                         this.storageService.setUserName(username);
+                        this.storageService.setUserPass(password);
                         // console.log(this.storageService.getUserToken());
                         // return true to indicate successful login
                         // if(response.json().Messages[0].Message){

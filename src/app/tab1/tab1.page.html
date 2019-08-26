@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Tab One
+      Nossi College of Art
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -18,15 +18,51 @@
       
       <ion-card-header>
         <ion-card-subtitle>Get Started</ion-card-subtitle>
-        <ion-card-title>Welcome to Nossi Scheduler</ion-card-title>
+        <ion-card-title>Welcome to Nossi</ion-card-title>
       </ion-card-header>
       <ion-card-content id="home-content">
-          <ion-button href="/registrar-auth" routerDirection="forward" expand="block" fill="outline">
-            Login
+          <!--  
+          <ion-button href="recruiter/registrar-auth" routerDirection="forward" expand="block" fill="outline">
+            Recruiter Login
           </ion-button>
-        <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p>
+          -->
+        <!-- <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p> -->
       </ion-card-content>
     </ion-card>
+
+    <ion-content class="card-background-page">
+
+      <ion-row>
+        <ion-col size="6">
+          <ion-card color="secondary" (click)="checkLoginAndGoto('students/student-form', 'student')">
+            <!-- <img src="img/card-saopaolo.png"/> -->
+            <ion-icon name="md-people"></ion-icon>
+            <div class="card-title">
+              <ion-button fill="clear">
+                Prospects
+              </ion-button> 
+            </div>
+            <div class="card-subtitle">Explore, Learn, and Apply </div>
+          </ion-card>
+        </ion-col>
+        <ion-col size="6">
+          <ion-card color="primary" (click)="checkLoginAndGoto('recruiters/home', 'recruiter')">
+            <!-- <img src="img/card-amsterdam.png"/> -->
+            <ion-icon name="md-person"></ion-icon>
+            <div class="card-title">
+              <ion-button fill="clear">
+                Recruiters
+              </ion-button> 
+            </div>
+            <div class="card-subtitle">View, Edit, and Submit</div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      
+    
+      
+    
+    </ion-content>
     <ion-list lines="none">
       <ion-list-header>
         <ion-label>Resources</ion-label>
