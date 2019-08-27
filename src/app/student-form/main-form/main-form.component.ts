@@ -45,6 +45,7 @@ export class MainFormComponent implements OnInit {
 	segment;
 	slideBeginning;
 	slideEnd;
+	recruiterNotes;
 
   // @ViewChild(IonSlides) slides: IonSlides;
   @ViewChild('slides') slides;
@@ -71,12 +72,13 @@ export class MainFormComponent implements OnInit {
 		//this.navCtrl.setRoot(Home);
 	}
   constructor( 
-	//public navCtrl: NavController, 
-	public modalController: ModalController,
-	public alertController: AlertController,
-    public _data:Data, 
-    public formBuilder: FormBuilder, 
-    public storageService:StorageService ) {
+		//public navCtrl: NavController, 
+		public modalController: ModalController,
+		public alertController: AlertController,
+		public _data:Data, 
+		public formBuilder: FormBuilder, 
+		public storageService:StorageService 
+	){
     this.buildProspectForm();
     this.slideOneForm = formBuilder.group({
         firstName: [''],
@@ -104,12 +106,18 @@ export class MainFormComponent implements OnInit {
       // photoCT: this.formBuilder.control(null)
 	});
 	this.slideFourForm = formBuilder.group({
-		highSchool: [''],
-		gradYear: [''],
-		parentName: [''],
-		parentPhone: [''], //home phone
-		instagram: [''], //custom notes
-		recruiterNotes: [''] //custom notes
+		highSchool: this.formBuilder.control(null),
+		gradYear: this.formBuilder.control(null),
+		parentName: this.formBuilder.control(null),
+		parentPhone: this.formBuilder.control(null), //home phone
+		instagram: this.formBuilder.control(null), //custom notes
+		//recruiterNotes: [''] //custom notes
+		// highSchool: [''],
+		// gradYear: [''],
+		// parentName: [''],
+		// parentPhone: [''], //home phone
+		// instagram: [''], //custom notes
+		// recruiterNotes: [''] //custom notes
 	});
 	// this.slideFiveForm = formBuilder.group({
 	// 	address1: [''],
@@ -191,7 +199,22 @@ export class MainFormComponent implements OnInit {
 		this.slides.lockSwipes(true); 
 		//this.storageService.test();
 	} 
-
+	async presentCustomAlert(h, s, m, c) {
+		const alert = await this.alertController.create({
+		  backdropDismiss: false,
+		  header: h,
+		  subHeader: s,
+		  message: m,
+		  buttons: [
+			{
+			  text: 'OK',
+			  handler: c
+			}
+		  ]
+		});
+	
+		await alert.present();
+	  }
 	async presentAlert() {
 		const alert = await this.alertController.create({
 		  header: 'Thanks for Requesting Info!',
@@ -214,8 +237,103 @@ export class MainFormComponent implements OnInit {
 		const modal = await this.modalController.create({
 			component: PinpadComponent
 		});
+		modal.onDidDismiss().then((dataReturned) => {
+			//this.presentAlertRadio();
+			//console.log('Back');
+			
+			if (dataReturned.data == true) {
+				
+				this.presentAlertRadio();
+				//console.log(dataReturned.data);
+				//this.dataReturned = dataReturned.data;
+				//alert('Modal Sent Data :'+ dataReturned);
+			}
+			
+		});
 		return await modal.present();
 	}
+
+	async presentAlertRadio() {
+		const alert = await this.alertController.create({
+		  backdropDismiss: false,
+		  header: 'Recruiter Notes',
+		  inputs: [
+			// {
+			//   name: 'recruiterPreset',
+			//   type: 'radio',
+			//   label: 'None',
+			//   value: '"No Recruiter Comment"',
+			//   checked: true
+			// },
+			{
+			  name: 'recruiterPreset',
+			  type: 'radio',
+			  label: 'WHAN',
+			  value: 'WHAN'
+			},
+			{
+			  name: 'recruiterPreset',
+			  type: 'radio',
+			  label: 'AG',
+			  value: 'AG'
+			},
+			{
+			  name: 'recruiterPreset',
+			  type: 'radio',
+			  label: 'AP',
+			  value: 'AP'
+			},
+			{
+			  name: 'recruiterPreset',
+			  type: 'radio',
+			  label: 'HSG',
+			  value: 'HSG'
+			},
+			{
+			  name: 'recruiterPreset',
+			  type: 'radio',
+			  label: 'TSP',
+			  value: 'TSP'
+			}
+		  ],
+		  buttons: [
+			// {
+			//   text: 'Cancel',
+			//   role: 'cancel',
+			//   cssClass: 'secondary',
+			//   handler: () => {
+			//     console.log('Confirm Cancel');
+			//   }
+			// }, 
+			{
+			  text: 'Ok',
+			  handler: (data) => {
+				let recruiterObject = { "recuiterNotes": data};
+				let degreeObject = {"degree": this.slideThreeForm.value};
+				let finalForm = Object.assign(recruiterObject, this.slideOneForm.value, this.slideTwoForm.value, degreeObject, this.slideFourForm.value);
+				console.log(finalForm);
+				this.recruiterNotes = data;
+				this.storageService.setNewProspect(finalForm);
+				this.presentCustomAlert(
+					'Prospect Stored',
+					'',
+					'Return to Student Apply Form',
+					() => {
+						console.log(this.recruiterNotes);
+						//this.modalCtrl.dismiss(data);
+						/*this.storageService.setRecruiterNotes(data).then( result => {
+						
+						});*/
+						//this.router.navigate(['students/student-form']);
+					}
+				);
+			  }
+			}
+		  ]
+		});
+	
+		await alert.present();
+	  }
 	ngOnInit() {
 		this.slides.isBeginning().then(data => {
 			this.slideBeginning = data;

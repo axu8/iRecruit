@@ -50,8 +50,8 @@ export class PinpadComponent implements OnInit {
         console.log(result);
         console.log(this.pin);
         if(result.match(this.pin)){
-          this.modalCtrl.dismiss();
-          this.presentAlertRadio();
+          this.modalCtrl.dismiss(true);
+          //this.presentAlertRadio();
         } else {
           this.pin = "";
           this.presentAlert(
@@ -86,15 +86,15 @@ export class PinpadComponent implements OnInit {
   async presentAlertRadio() {
     const alert = await this.alertController.create({
       backdropDismiss: false,
-      header: 'Radio',
+      header: 'Recruiter Notes',
       inputs: [
-        {
-          name: 'recruiterPreset',
-          type: 'radio',
-          label: 'None',
-          value: '"No Recruiter Comment"',
-          checked: true
-        },
+        // {
+        //   name: 'recruiterPreset',
+        //   type: 'radio',
+        //   label: 'None',
+        //   value: '"No Recruiter Comment"',
+        //   checked: true
+        // },
         {
           name: 'recruiterPreset',
           type: 'radio',
@@ -116,6 +116,12 @@ export class PinpadComponent implements OnInit {
         {
           name: 'recruiterPreset',
           type: 'radio',
+          label: 'HSG',
+          value: 'HSG'
+        },
+        {
+          name: 'recruiterPreset',
+          type: 'radio',
           label: 'TSP',
           value: 'TSP'
         }
@@ -131,13 +137,17 @@ export class PinpadComponent implements OnInit {
         // }, 
         {
           text: 'Ok',
-          handler: () => {
+          handler: (data) => {
             this.presentAlert(
               'Prospect Stored',
               '',
               'Return to Student Apply Form',
               () => {
-                this.router.navigate(['students/student-form']);
+                this.modalCtrl.dismiss(data);
+                /*this.storageService.setRecruiterNotes(data).then( result => {
+                
+                });*/
+                //this.router.navigate(['students/student-form']);
               }
             );
           }

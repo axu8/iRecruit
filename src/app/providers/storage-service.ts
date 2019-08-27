@@ -20,8 +20,17 @@ export class StorageService {
     //console.log('Hello StoreProspect Service Provider');
   }
 
+  setRecruiterNotes(notes){
+  	return this.storage.set("recruiterNotes", notes);
+  }
+  getRecruiterNotes(){
+  	return this.storage.get("recruiterNotes").then(val => val);
+  }
   setUserToken(tokenValue){
   	this.storage.set("token", tokenValue);
+  }
+  getUserToken(){
+  	return this.storage.get("token").then(val => val);
   }
   setUserName(userNameValue){
   	this.storage.set("username", userNameValue);
@@ -38,9 +47,7 @@ export class StorageService {
   getUserPass(){
   	return this.storage.get("pass").then(val => val);
   }
-  getUserToken(){
-  	return this.storage.get("token").then(val => val);
-  }
+  
   // getUserToken(){
   // 	this.storage.get("token").then((val) => {
   // 		console.log("val is", val);
