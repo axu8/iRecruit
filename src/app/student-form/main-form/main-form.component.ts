@@ -308,25 +308,29 @@ export class MainFormComponent implements OnInit {
 			{
 			  text: 'Ok',
 			  handler: (data) => {
-				let recruiterObject = { "recuiterNotes": data};
-				let degreeObject = {"degree": this.slideThreeForm.value};
-				let finalForm = Object.assign(recruiterObject, this.slideOneForm.value, this.slideTwoForm.value, degreeObject, this.slideFourForm.value);
-				console.log(finalForm);
-				this.recruiterNotes = data;
-				this.storageService.setNewProspect(finalForm);
-				this.presentCustomAlert(
-					'Prospect Stored',
-					'',
-					'Return to Student Apply Form',
-					() => {
-						console.log(this.recruiterNotes);
-						//this.modalCtrl.dismiss(data);
-						/*this.storageService.setRecruiterNotes(data).then( result => {
-						
-						});*/
-						//this.router.navigate(['students/student-form']);
-					}
-				);
+				this.storageService.getUserName().then( recruiterName => {
+
+					let userObject = { "recuiterName": recruiterName };
+					let recruiterObject = { "recuiterNotes": data };
+					let degreeObject = {"degree": this.slideThreeForm.value};
+					let finalForm = Object.assign(recruiterObject, this.slideOneForm.value, this.slideTwoForm.value, degreeObject, userObject, this.slideFourForm.value);
+					console.log(finalForm);
+					this.recruiterNotes = data;
+					this.storageService.setNewProspect(finalForm);
+					this.presentCustomAlert(
+						'Prospect Stored',
+						'',
+						'Return to Student Apply Form',
+						() => {
+							console.log(this.recruiterNotes);
+							//this.modalCtrl.dismiss(data);
+							/*this.storageService.setRecruiterNotes(data).then( result => {
+							
+							});*/
+							//this.router.navigate(['students/student-form']);
+						}
+					);
+				});
 			  }
 			}
 		  ]

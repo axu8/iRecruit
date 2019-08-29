@@ -9,13 +9,13 @@ const routes: Routes = [
   { path: '', loadChildren: './tabs/tabs.module#TabsPageModule' },
   //{ path: '', component: MainComponent},
   //{ path: 'registrar-auth', component: BrochureModule },
-  {
-    path: 'recruiters',
-    children: [
-      { path: 'login', loadChildren: './registrar-auth/registrar-auth.module#RegistrarAuthPageModule' },
-      { path: 'registrar-home', loadChildren: './registrar-home/registrar-home.module#RegistrarHomePageModule' }
-   ]
-  },
+  // {
+  //   path: 'recruiters',
+  //   children: [
+  //     { path: 'login', loadChildren: './registrar-auth/registrar-auth.module#RegistrarAuthPageModule' },
+  //     { path: 'registrar-home', loadChildren: './registrar-home/registrar-home.module#RegistrarHomePageModule' }
+  //  ]
+  // },
   { path: 'brochureHome', loadChildren: './brochure/brochure.module#BrochureModule' },
   { path: 'schedule-manager', loadChildren: './schedule-manager/schedule-manager.module#ScheduleManagerPageModule' },
   // {
@@ -27,9 +27,7 @@ const routes: Routes = [
 
   {
     path: 'recruiters',
-    children: [
-      { path: 'home', loadChildren: './registrar-home/registrar-home.module#RegistrarHomePageModule' }
-    ]
+    loadChildren: './recruit-home/recruit-home.module#RecruitHomePageModule'
   },
   {
     path: 'students',
@@ -51,6 +49,11 @@ const routes: Routes = [
  
     ]
   }
+  //,
+  // { path: 'recruit1', loadChildren: './recruit1/recruit1.module#Recruit1PageModule' },
+  // { path: 'recruit2', loadChildren: './recruit2/recruit2.module#Recruit2PageModule' },
+  // { path: 'recruit3', loadChildren: './recruit3/recruit3.module#Recruit3PageModule' },
+  // { path: 'recruit-home', loadChildren: './recruit-home/recruit-home.module#RecruitHomePageModule' }
 ];
 
 @NgModule({

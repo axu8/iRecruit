@@ -20,11 +20,9 @@ export class StorageService {
     //console.log('Hello StoreProspect Service Provider');
   }
 
-  setRecruiterNotes(notes){
-  	return this.storage.set("recruiterNotes", notes);
-  }
-  getRecruiterNotes(){
-  	return this.storage.get("recruiterNotes").then(val => val);
+  
+  getUserName(){
+  	return this.storage.get("username").then(val => val);
   }
   setUserToken(tokenValue){
   	this.storage.set("token", tokenValue);
@@ -173,6 +171,9 @@ export class StorageService {
     //this.storage.set("newProspects", JSON.stringify(this.newProspectsArray));
     
     //console.log(this.newProspectsArray)
+  }
+  getAllProspects(){
+    return this.storage.get("newProspects").then(val => val);
   }
   getProspects(){
     this.storage.get("newProspects")

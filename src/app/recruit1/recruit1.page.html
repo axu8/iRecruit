@@ -1,0 +1,24 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>
+        Recruiter Home
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content padding>
+  <h1>View Submitted Prospects</h1>
+  <ion-card *ngFor="let card of prospects">
+    <ion-card-content>
+      <ion-card-title>
+        {{card.firstName}} {{card.lastName}}
+      </ion-card-title>
+      <p>
+        {{card.emailAddress}}
+      </p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

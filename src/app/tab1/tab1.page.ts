@@ -12,6 +12,7 @@ import { PinpadComponent } from '../student-form/pinpad/pinpad.component';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  globalPath: string;
   constructor(
     public storageService: StorageService,
     public router: Router,
@@ -31,11 +32,19 @@ export class Tab1Page {
     return await modal.present();
   }
   async presentPinpadModal(path) {
-    
+    this.globalPath = path;
     const modal = await this.modalController.create({
       component: PinpadComponent,
       componentProps: {
         'path': path
+      }
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      console.log(dataReturned);
+      if (dataReturned.data == true ) {
+        this.router.navigate([this.globalPath]);
+        //this.dataReturned = dataReturned.data;
+        //alert('Modal Sent Data :'+ dataReturned);
       }
     });
     return await modal.present();
@@ -57,6 +66,7 @@ export class Tab1Page {
           this.presentModal(path);
         } else {
           this.presentPinpadModal(path);
+          this.globalPath = path;
         }
       });
     }

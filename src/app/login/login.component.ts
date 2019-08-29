@@ -44,18 +44,22 @@ export class LoginComponent implements OnInit {
 		this.presentLoading();
 		this.authenticationService.login(recCredentials.userName, recCredentials.userPassword)
 		.subscribe(result => {
-			console.log(result);
+      this.loading.dismiss();
+			//console.log(result);
 			if(result.status === true){
         //this.router.navigate(['/registrar-home']);
 
-        this.loading.dismiss();
-        console.log(this.storageService.getUserToken());
-        this.storageService.getCampaign().then( result => {
-          if (result == null){
+        this.presentLoading();
+        this.modalController.dismiss();
+        //console.log(this.storageService.getUserToken());
+        this.storageService.getCampaign().then( c => {
+          this.loading.dismiss();
+          if (c == null){
             this.presentAlertPrompt();
           } else {
+            console.log(this.navParams.get('path'));
             this.router.navigate([this.navParams.get('path')]);
-            this.modalController.dismiss();
+            // this.modalController.dismiss();
           }
           console.log('Current Campaign is: ' + result);
         });
@@ -63,9 +67,12 @@ export class LoginComponent implements OnInit {
         
 			} else {
 				this.error = result.message + ' Please Try Again.';
-				this.loading.dismiss();
+				//this.loading.dismiss();
 			}
 		});
+  }
+  cancelLogin(){
+    this.modalController.dismiss();
   }
 
   async presentLoading() {
@@ -101,7 +108,8 @@ export class LoginComponent implements OnInit {
             console.log('Nav Path: ' + this.navParams.get('path'));
           }
         }
-      ]
+      ],
+      backdropDismiss: false
     });
 
     await alert.present();

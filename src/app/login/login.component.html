@@ -24,6 +24,7 @@
       
       <div padding>
         <ion-button type="submit" class="submitButton" block>Sign In</ion-button>
+        <ion-button (click)="cancelLogin()" color="danger" class="submitButton" block>Cancel</ion-button>
       </div>
       <ion-item class="loginError" padding *ngIf="error">{{ error }}</ion-item>
     </form>
