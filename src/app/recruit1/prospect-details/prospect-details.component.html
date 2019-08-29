@@ -1,0 +1,68 @@
+<ion-content>
+   <h1>{{ prospect.firstName }} {{ prospect.lastName }}<!-- - {{ prospectID }} --></h1>
+  <ion-list>
+    <ion-item>
+      <ion-label>First Name: {{ prospect.firstName }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Last Name: {{ prospect.lastName }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Email Address: {{ prospect.emailAddress }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Address Line 1: {{ prospect.address1 }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Address Line 2: {{ prospect.address2 }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>City: {{ prospect.city }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>State: {{ prospect.state }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Zip: {{ prospect.zip }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Student Phone: {{ prospect.studentPhone }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>OK To Text: {{ prospect.okToText }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Degree(s):  
+        <span *ngIf="prospect.degree.graphicBGA != null">graphicBGA</span>
+        <span *ngIf="prospect.degree.illustrationBGA != null">, illustrationBGA</span>
+        <span *ngIf="prospect.degree.photoBGA != null">, photoBGA</span>
+        <span *ngIf="prospect.degree.videoBGA != null">, videoBGA</span>
+        <span *ngIf="prospect.degree.webBGA != null">, webBGA</span>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>High School: {{ prospect.highSchool }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Grad Year: {{ prospect.gradYear }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Instagram: {{ prospect.instagram }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Parent Name: {{ prospect.parentName }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Parent Phone: {{ prospect.parentPhone }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Recruiter Name: {{ prospect.recuiterName }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Recruiter Notes: {{ prospect.recuiterNotes }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Unique ID: {{ prospect.uniqueID }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

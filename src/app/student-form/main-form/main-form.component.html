@@ -44,7 +44,15 @@
               <h1>Step 1: Basic Info</h1>
               <ion-item>
                 <ion-label position="floating">First</ion-label>
-                <ion-input type="text" formControlName="firstName" #firstNameField></ion-input>
+				<ion-input type="text" formControlName="firstName" #firstNameField></ion-input>
+				<div *ngIf="slideOneForm.controls['firstName'].invalid && (slideOneForm.controls['firstName'].dirty || slideOneForm.controls['firstName'].touched)">
+					<ion-text class="error" color="danger" *ngIf="slideOneForm.controls['firstName'].errors.required">
+						First Name is Required.
+					</ion-text>
+				</div>
+				<!-- <ion-text color="danger" *ngIf="angForm.controls['name'].errors.required">
+					First Name is required.
+				</ion-text> -->
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Last</ion-label>
@@ -77,19 +85,19 @@
             <form [formGroup]="slideTwoForm">
               <ion-item>
                 <ion-label position="floating">Address Line 1</ion-label>
-                <ion-input type="text" formControlName="address1"></ion-input>
+                <ion-input type="text" formControlName="address1" #address1Field></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Address Line 2</ion-label>
-                <ion-input type="text" formControlName="address2"></ion-input>
+                <ion-input type="text" formControlName="address2" #address2Field></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">City</ion-label>
-                <ion-input type="text" formControlName="city"></ion-input>
+                <ion-input type="text" formControlName="city" #cityField></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label>State</ion-label>
-                <ion-select formControlName="state">
+                <ion-select formControlName="state" #stateField>
                   <ion-select-option value="alabama">Alabama</ion-select-option>
                   <ion-select-option value="alaska">Alaska</ion-select-option>
                   <ion-select-option value="arizona">Arizona</ion-select-option>
@@ -142,7 +150,7 @@
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Zip</ion-label>
-                <ion-input type="number" formControlName="zip"></ion-input>
+                <ion-input type="number" formControlName="zip" #zipField></ion-input>
               </ion-item>
             </form>
           </ion-list>
@@ -189,7 +197,7 @@
                   <span class="checkText">Web & IxD</span>
                 </div>
                 BGA
-                <ion-checkbox formControlName="webBGA" class="hide-checkbox"></ion-checkbox>
+                <ion-checkbox formControlName="webBGA" class="hide-checkbox" #webBGAField></ion-checkbox>
               </ion-label>
             </ion-item>
             <ion-item>
@@ -214,7 +222,7 @@
                   <span class="checkText">Photography</span>
                 </div>
                 BGA	
-                <ion-checkbox formControlName="photoBGA" class="hide-checkbox"></ion-checkbox>
+                <ion-checkbox formControlName="photoBGA" class="hide-checkbox" #photoBGAField></ion-checkbox>
               </ion-label>
             </ion-item>
             <ion-item>
@@ -300,7 +308,7 @@
                   <span class="checkText">Graphic Design</span>
                 </div>	
                 BGA
-                <ion-checkbox formControlName="graphicBGA" class="hide-checkbox"></ion-checkbox>
+                <ion-checkbox formControlName="graphicBGA" class="hide-checkbox" #graphicBGAField></ion-checkbox>
               </ion-label>
             </ion-item>
             <ion-item>
@@ -321,7 +329,7 @@
                   <span class="checkText">Videography</span>
                 </div>
                 BGA	
-                <ion-checkbox formControlName="videoBGA" class="hide-checkbox"></ion-checkbox>
+                <ion-checkbox formControlName="videoBGA" class="hide-checkbox" #videoBGAField></ion-checkbox>
               </ion-label>
             </ion-item>
             <ion-item>
@@ -341,7 +349,7 @@
                   <span class="checkText">Illustration</span>
                 </div>
                 BGA	
-                <ion-checkbox formControlName="illustrationBGA" class="hide-checkbox"></ion-checkbox>
+                <ion-checkbox formControlName="illustrationBGA" class="hide-checkbox" #illustrationBGAField></ion-checkbox>
               </ion-label>
             </ion-item>
           </ion-list>
@@ -361,6 +369,10 @@
 					<ion-item>
 						<ion-label position="floating">Graduation Year</ion-label>
 						<ion-input type="text" formControlName="gradYear" #gradYearField></ion-input>
+					</ion-item>
+					<ion-item>
+						<ion-label position="floating">Instagram</ion-label>
+						<ion-input type="text" formControlName="instagram" #instagramField></ion-input>
 					</ion-item>
 					<ion-item>
 						<ion-label position="floating">Parent's Name</ion-label>
@@ -383,34 +395,80 @@
 				</div>
 				<h1>Step 5: Confirm</h1>
 				<!-- <ion-item> -->
-					<ion-list>
+						<!-- <p>Form value: {{ slideOneForm.value | json }}</p>
+  						<p>Form status: {{ slideOneForm.status | json }}</p>
+
+						<p>Form value: {{ slideTwoForm.value | json }}</p>
+  						<p>Form status: {{ slideTwoForm.status | json }}</p>
+						  
+						<p>Form value: {{ slideThreeForm.value | json }}</p>
+  						<p>Form status: {{ slideThreeForm.status | json }}</p>
+						
+						<p>Form value: {{ slideFourForm.value | json }}</p>
+  						<p>Form status: {{ slideFourForm.status | json }}</p> -->
+						<ion-grid>
+							<ion-row>
+								<ion-col>
+									<ion-list>
+										<ion-item>
+											{{ firstNameField.value }}
+										</ion-item>
+										<ion-item>
+											{{ address1Field.value }}
+										</ion-item>
+										<ion-item>
+											{{ cityField.value }}
+										</ion-item>
+										<ion-item>
+											{{ zipField.value }}
+										</ion-item>
+										<ion-item>
+											{{ studentPhoneField.value }}
+										</ion-item>
+										<ion-item>
+											<span *ngIf="okToTextField.checked == true">Ok To Text</span>
+											<span *ngIf="okToTextField.checked == false">Do Not Text</span>
+										</ion-item>
+										<ion-item>
+											{{ highSchoolField.value }}
+										</ion-item>
+									</ion-list>
+								</ion-col>
+								<ion-col>
+									<ion-list>
+										<ion-item>
+											{{ lastNameField.value }}
+										</ion-item>
+										<ion-item>
+											{{ address2Field.value }}
+										</ion-item>
+										<ion-item>
+											{{ stateField.value }}
+										</ion-item>
+										<ion-item>
+											<span *ngIf="graphicBGAField.checked == true">Graphic Design BGA</span>
+											<span *ngIf="illustrationBGAField.checked == true">, Illustration BGA</span>
+											<span *ngIf="photoBGAField.checked == true">, Photography BGA</span>
+											<span *ngIf="videoBGAField.checked == true">, Videoography BGA</span>
+											<span *ngIf="webBGAField.checked == true">, Web Design BGA</span>
+										</ion-item>
+										<ion-item>
+											{{ emailAddressField.value }}
+										</ion-item>
+										<ion-item>
+											{{ instagramField.value }}
+										</ion-item>
+										<ion-item>
+											{{ gradYearField.value }}
+										</ion-item>
+									</ion-list>
+								</ion-col>
+							</ion-row>
+						</ion-grid>
 				
-						<ion-item>
-							{{ firstNameField.value }}
-						</ion-item>
-						<ion-item>
-							{{ lastNameField.value }}
-						</ion-item>
-						<ion-item>
-							{{ emailAddressField.value }}
-						</ion-item>
-						<ion-item>
-							{{ studentPhoneField.value }}
-						</ion-item>
-						<ion-item>
-							{{ highSchoolField.value }}
-						</ion-item>
-						<ion-item>
-							{{ gradYearField.value }}
-						</ion-item>
-						<ion-item>
-							{{ parentNameField.value }}
-						</ion-item>
-						<ion-item>
-							{{ parentPhoneField.value }}
-						</ion-item>
-						
-						
+				
+				
+		
 						<!-- <ion-item>
 							<ion-label>{{firstName}}</ion-label>
 						</ion-item>
@@ -423,10 +481,10 @@
 						<ion-item>
 							<ion-label>{{okayToText}}</ion-label>
 						</ion-item> -->
-					</ion-list>
+					
 
 					<ion-button (click)="onResetForm()" expand="full" fill="outline">Reset</ion-button>
-					<ion-button (click)="presentAlert()" expand="full">Submit</ion-button>
+					<ion-button [disabled]="slideOneForm.invalid" (click)="presentAlert()" expand="full">Submit</ion-button>
 					<!-- <ion-button type="button" (click)="onResetForm()" ion-button full>Reset</ion-button>
 					<ion-button type="submit" ion-button full>Submit</ion-button> -->
 				<!-- </ion-item> -->

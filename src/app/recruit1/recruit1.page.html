@@ -11,13 +11,13 @@
 
 <ion-content padding>
   <h1>View Submitted Prospects</h1>
-  <ion-card *ngFor="let card of prospects">
+  <ion-card *ngFor="let prospect of prospects" (click)="presentProspectDetailsModal(prospect.uniqueID)">
     <ion-card-content>
       <ion-card-title>
-        {{card.firstName}} {{card.lastName}}
+        {{prospect.firstName}} {{prospect.lastName}}
       </ion-card-title>
       <p>
-        {{card.emailAddress}}
+        {{prospect.emailAddress}}
       </p>
     </ion-card-content>
   </ion-card>

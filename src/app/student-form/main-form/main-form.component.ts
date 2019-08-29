@@ -79,13 +79,14 @@ export class MainFormComponent implements OnInit {
 		public formBuilder: FormBuilder, 
 		public storageService:StorageService 
 	){
-    this.buildProspectForm();
+    //this.buildProspectForm();
     this.slideOneForm = formBuilder.group({
-        firstName: [''],
+        firstName: this.formBuilder.control(null, Validators.required),
         lastName: [''],
         emailAddress: [''],
-        studentPhone:[''],
-        okToText:['']
+		studentPhone:[''],
+		okToText: this.formBuilder.control(true, Validators.required),
+        //okToText:[''] yourControl: [0, Vaidators.required]
     });
     this.slideTwoForm = formBuilder.group({
       address1: [''],
@@ -313,7 +314,8 @@ export class MainFormComponent implements OnInit {
 					let userObject = { "recuiterName": recruiterName };
 					let recruiterObject = { "recuiterNotes": data };
 					let degreeObject = {"degree": this.slideThreeForm.value};
-					let finalForm = Object.assign(recruiterObject, this.slideOneForm.value, this.slideTwoForm.value, degreeObject, userObject, this.slideFourForm.value);
+					let uniqueID = {"uniqueID": this.createID()};
+					let finalForm = Object.assign(recruiterObject, this.slideOneForm.value, this.slideTwoForm.value, degreeObject, userObject, uniqueID, this.slideFourForm.value);
 					console.log(finalForm);
 					this.recruiterNotes = data;
 					this.storageService.setNewProspect(finalForm);
@@ -337,7 +339,19 @@ export class MainFormComponent implements OnInit {
 		});
 	
 		await alert.present();
-	  }
+	}
+	createID(){
+ 
+		var id = 'xxxxxxxx'.replace(/[x]/g, function(c) {
+			//var r = (dt + Math.random()*16)%16 | 0;
+			//dt = Math.floor(dt/16);
+			  //return new Date().getTime().toString().split('').splice(0,13).join('') + String(Math.floor(Math.random()*10))
+			return String(Math.floor(Math.random()*10))
+			//return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+		});
+	 
+		return new Date().getTime().toString() + id;
+	}
 	ngOnInit() {
 		this.slides.isBeginning().then(data => {
 			this.slideBeginning = data;

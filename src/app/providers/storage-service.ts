@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
+import { BehaviorSubject } from 'rxjs';
 
 /*
   Generated class for the StoreProspectsService provider.
@@ -15,6 +16,8 @@ export class StorageService {
 	tokenVal: string;
   newProspectsArray: Array<any> = [];
   newProspect: any;
+  public prospectData: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+
 
   constructor(public http: HttpClient, public storage: Storage) {
     //console.log('Hello StoreProspect Service Provider');
@@ -95,6 +98,7 @@ export class StorageService {
           this.storage.set("newProspects", this.newProspectsArray).then(() => {
             this.newProspectsArray = [];
             this.storage.get("newProspects").then((pr) => {
+              this.prospectData.next(pr);
               console.log(pr);
             });
           });
@@ -104,6 +108,7 @@ export class StorageService {
           this.storage.set("newProspects",this.newProspectsArray).then(() => {
             this.newProspectsArray = [];
             this.storage.get("newProspects").then((data) => {
+              this.prospectData.next(data);
               console.log(data);
             });
           });
