@@ -8,6 +8,7 @@ import { Prospect } from '../prospect-model';
 import { AlertController } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
 import { PinpadComponent } from '../pinpad/pinpad.component';
+import { IonContent } from '@ionic/angular';
 // import { KeypadComponent } from '../../keypad/keypad.component';
 //import { PinpadPage } from '../../pinpad/pinpad.page';
 // import { PinpadPageModule } from '../../pinpad/pinpad.module';
@@ -31,6 +32,7 @@ export class MainFormComponent implements OnInit {
   // });
   
   @ViewChild('signupSlider') signupSlider;
+  @ViewChild(IonContent) content: IonContent;
 
   
 
@@ -82,18 +84,27 @@ export class MainFormComponent implements OnInit {
     //this.buildProspectForm();
     this.slideOneForm = formBuilder.group({
         firstName: this.formBuilder.control(null, Validators.required),
-        lastName: [''],
-        emailAddress: [''],
-		studentPhone:[''],
+        lastName: this.formBuilder.control(null, Validators.required),
+        emailAddress: this.formBuilder.control(null, Validators.compose([
+			Validators.required,
+			Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+		])),
+		studentPhone: this.formBuilder.control(null, Validators.compose([
+			Validators.required,
+			Validators.minLength(10)
+		])),
 		okToText: this.formBuilder.control(true, Validators.required),
         //okToText:[''] yourControl: [0, Vaidators.required]
     });
     this.slideTwoForm = formBuilder.group({
-      address1: [''],
-      address2: [''],
-      city: [''],
-      state: [''],
-      zip: ['']
+      address1: this.formBuilder.control(null, Validators.required),
+      address2: this.formBuilder.control(null),
+      city: this.formBuilder.control(null, Validators.required),
+      state: this.formBuilder.control(null, Validators.required),
+      zip: this.formBuilder.control(null,  Validators.compose([
+			Validators.required,
+			Validators.minLength(5)
+		]))
     });
     this.slideThreeForm = formBuilder.group({
       graphicBGA: this.formBuilder.control(null),
@@ -105,33 +116,34 @@ export class MainFormComponent implements OnInit {
       // photoAS: this.formBuilder.control(null),
       // uxuiCT: this.formBuilder.control(null),
       // photoCT: this.formBuilder.control(null)
-	});
+	}/* , {validator: this.checkDegreeSelection()} */);
+	
 	this.slideFourForm = formBuilder.group({
-		highSchool: this.formBuilder.control(null),
-		gradYear: this.formBuilder.control(null),
-		parentName: this.formBuilder.control(null),
-		parentPhone: this.formBuilder.control(null), //home phone
+		highSchool: this.formBuilder.control(null, Validators.required),
+		gradYear: this.formBuilder.control(null, Validators.compose([
+			Validators.required,
+			Validators.minLength(2)
+		])),
+		parentName: this.formBuilder.control(null, Validators.required),
+		parentPhone: this.formBuilder.control(null, Validators.compose([
+			Validators.required,
+			Validators.minLength(10)
+		])), //home phone
 		instagram: this.formBuilder.control(null), //custom notes
-		//recruiterNotes: [''] //custom notes
-		// highSchool: [''],
-		// gradYear: [''],
-		// parentName: [''],
-		// parentPhone: [''], //home phone
-		// instagram: [''], //custom notes
-		// recruiterNotes: [''] //custom notes
 	});
-	// this.slideFiveForm = formBuilder.group({
-	// 	address1: [''],
-	// 	address2: [''],
-	// 	city: [''],
-	// 	state: [''],
-	// 	zip: ['']
-	// });
   }
+//   checkDegreeSelection(){
+// 	  if( this.slideThreeForm.get('graphicBGA').value || this.slideThreeForm.get('webBGA').value || this.slideThreeForm.get('photoBGA').value || this.slideThreeForm.get('illustrationBGA').value || this.slideThreeForm.get('videoBGA').value){
+// 		return true;
+// 	  } else {
+// 		return false;
+// 	  }
+//   }
   slideToNext() {
 		//this.slider.getSlider().slideNext(); // also not working
 		this.slides.lockSwipes(false);
-	    this.slides.slideNext();
+		this.slides.slideNext();
+		this.content.scrollToTop(0);
 		this.slides.lockSwipes(true);
 		//console.log( this.slides.nativeElement.isBeginning() );
 		this.slides.isBeginning().then(data => {
@@ -146,6 +158,7 @@ export class MainFormComponent implements OnInit {
 		//this.slider.getSlider().slideNext(); // also not working
 		this.slides.lockSwipes(false);
 		this.slides.slidePrev(); // not working
+		this.content.scrollToTop(0);
 		this.slides.lockSwipes(true);
 		this.slides.isBeginning().then(data => {
 			this.slideBeginning = data;
