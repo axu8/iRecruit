@@ -11,4 +11,22 @@
 
 <ion-content padding>
   <h1>Submit All Prospects</h1>
+  <ion-badge style="color: white;" color="warning" *ngIf="prospects.length == 0">You have no prospects to submit.</ion-badge>
+  <ion-badge style="color: white;" color="secondary" *ngIf="prospects.length > 0">You have {{ prospects.length }} unsubmitted Prospect<span *ngIf="prospects.length > 1">s</span></ion-badge>
+  <ion-button [disabled]="submissionDone" (click)="sendProspects()" class="white-text" expand="full" color="primary" [disabled]="prospects.length == 0">Submit Now</ion-button>
+  <p *ngIf="message">{{ message }}</p>
+  <ion-progress-bar *ngIf="progress" color="primary" value="progress"></ion-progress-bar>
+  <ion-list *ngIf="messages">
+    <ion-item lines="none" *ngFor="let m of messages">
+      <ion-label class="ion-text-wrap" [color]="m.status == 2 ? 'secondary' : 'danger'">
+        <ion-text>
+          <h3>{{ m.prospectData.firstName }} {{ m.prospectData.lastName }} - {{ m.prospectData.uniqueID }}</h3>
+          <!-- <h3>Prospect {{ m.prospectNo + 1 }}</h3> -->
+        </ion-text>
+        <ion-text>
+          <p>{{ m.message }}</p>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

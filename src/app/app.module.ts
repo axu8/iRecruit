@@ -12,7 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Data } from './providers/data';
 import { AuthenticationService } from './providers/authentication-service';
-// import { SubmitProspectService } from './providers/submit-prospect-service';
+import { SubmitProspectService } from './providers/submit-prospect-service';
 import { StorageService } from './providers/storage-service';
 import { MainSidebarComponent } from './main-sidebar/main-sidebar.component';
 import { BrochureSidebarComponent } from './brochure-sidebar/brochure-sidebar.component';
@@ -44,7 +44,7 @@ import { PinpadPageModule } from './pinpad/pinpad.module';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Data,
     AuthenticationService,
-    // SubmitProspectService,
+    SubmitProspectService,
     StorageService
   ],
   bootstrap: [AppComponent]

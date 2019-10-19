@@ -17,6 +17,8 @@ export class StorageService {
   newProspectsArray: Array<any> = [];
   newProspect: any;
   public prospectData: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  public user: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  public campaign: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
 
   constructor(public http: HttpClient, public storage: Storage) {

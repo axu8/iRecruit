@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+// import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Data } from './data';
 import { map } from "rxjs/operators";
+import { StorageService } from './storage-service';
 
 /*
   Generated class for the SubmitProspectService provider.
@@ -12,27 +14,174 @@ import { map } from "rxjs/operators";
 */
 @Injectable()
 export class SubmitProspectService {
-	prospects: any = [];
-	headers = new Headers({
-		'Content-Type': 'application/json',
-		'Accept':'application/json',
-		'TopSchoolSecurityToken': JSON.parse(localStorage.getItem('currentUser')).token
-	});
 	creds: any;
     body: any;
     res = {
         message: ''
-    };
-	constructor(public http: Http, public _data: Data) {
-		this._data.Prospects.subscribe((prospects) => { 
-			//this.prospects = prospects; 
-			this.prospects.push(prospects); 
-			//console.log(this.prospects);
+	};
+	campaign;
+	token: any;
+	ngOnInit() {
+		// this.storage.getUserToken().then(t => {
+		//   this.token = t;
+		// });
+		this.storage.getCampaign().then(c => {
+			this.campaign = c;
 		});
+		
+		this.storage.prospectData.subscribe((data) => {
+			this.prospects = data;
+			console.log(this.prospects);
+		});
+	
+	}
+	ionViewDidEnter(){
+		this.storage.getAllProspects().then(p => {
+			this.prospects = p;
+			console.log(this.prospects);
+		});
+		this.storage.getUserToken().then(t => {
+			this.token = t;
+		});
+	}
+	prospects: any = [];
+	headers;
+	// headers = new HttpHeaders({
+	// 	'Content-Type': 'application/json',
+	// 	'Accept':'application/json',
+	// });
+
+	// headers = new HttpHeaders()
+	// .set( 'TopSchoolSecurityToken', this.token )
+	// .set( 'Accept','application/json' )
+	// .set( 'Content-Type', 'application/json' );
+	
+	constructor(
+		public http: HttpClient, 
+		public storage: StorageService
+	) {
+		// this.storage.getUserToken().then(t => {
+		// 	this.token = t;
+		// });
+		this.storage.prospectData.subscribe((data) => {
+			this.prospects = data;
+			console.log(data);
+		});
+		// this.storage.getAllProspects().then(p => {
+		// 	this.prospects = p;
+		// 	console.log(this.prospects);
+		// });
+		// this._data.Prospects.subscribe((prospects) => { 
+		// 	//this.prospects = prospects; 
+		// 	this.prospects.push(prospects); 
+		// 	//console.log(this.prospects);
+		// });
 		console.log(JSON.stringify(this.prospects));
 		//this.prospects = data;
+		console.log(this.storage.getUserToken());
+	}
+	async submit(pr,n): Promise<any> {
+		await this.storage.getUserToken().then(t => {
+			this.token = t;
+			//this.headers.append('TopSchoolSecurityToken', this.token);
+			this.headers = new HttpHeaders({
+				'Content-Type': 'application/json',
+				'Accept':'application/json',
+				'TopSchoolSecurityToken': this.token
+			});
+		});
+
+		
+		console.log(this.headers, this.token);
+		this.creds = {
+		    "Opportunity":{
+				"Campaign": this.campaign,
+				"IsDefault":true,
+				"OpportunityId":pr[n].uniqueID,
+				"ProspectId":pr[n].uniqueID
+				// "LeadProvider": JSON.stringify(pr[n]),
+			},
+			// "CustomFieldValues":[
+			// 	{
+			// 		"FieldName":"gradYear",
+			// 		"Value": pr[n].gradYear
+			// 	},
+			// 	{
+			// 		"FieldName":"highSchool",
+			// 		"Value": pr[n].highSchool
+			// 	},
+			// 	{
+			// 		"FieldName":"instagram",
+			// 		"Value": pr[n].instagram
+			// 	},
+			// 	{
+			// 		"FieldName":"okToText",
+			// 		"Value": pr[n].okToText
+			// 	},
+			// 	{
+			// 		"FieldName":"instagram",
+			// 		"Value": pr[n].instagram
+			// 	},
+			// 	{
+			// 		"FieldName":"parentName",
+			// 		"Value": pr[n].parentName
+			// 	},
+			// 	{
+			// 		"FieldName":"parentPhone",
+			// 		"Value": pr[n].parentPhone
+			// 	},
+			// 	{
+			// 		"FieldName":"recruiterName",
+			// 		"Value": pr[n].recruiterName
+			// 	},
+			// 	{
+			// 		"FieldName":"recruiterNotes",
+			// 		"Value": pr[n].recruiterNotes
+			// 	},
+			// 	{
+			// 		"FieldName":"degree",
+			// 		"Value":pr[n].degree
+			// 	}
+			// ],
+			"Prospect":{
+				"Address": pr[n].address1,
+				"Address2": pr[n].address2,
+				"City":pr[n].city,
+				//"Country":"",
+				//"CountryOfCitizenship":"",
+				//"County":"",
+				"CreatedDateTime": pr[n].createdDateTime,
+				// "DoNotCallIndicator":true,
+				// "DoNotEmailIndicator":true,
+				"EmailAddress":pr[n].emailAddress,
+				"FirstName":pr[n].firstName,
+				// "Gender":"female",
+				//"HispanicOfAnyRace":"",
+				"HomePhoneNumber":pr[n].firstName,
+				"Id": pr[n].uniqueID,
+				"LastName":pr[n].lastName,
+				//"MobilePhoneNumber":"",
+				"PostalCode":pr[n].zip,
+				//"Prefix":"",
+				"State":pr[n].state,
+				"UniqueId":pr[n].uniqueID,
+				//"WorkPhoneNumber":""
+			}
+		}
+		this.body = JSON.stringify(this.creds);
+		console.log(this.body);
+        return this.http.post('http://topx.topschoollive.com/Recruitment/prospects', this.body, {headers: this.headers})
+        .map((response: Response) => {
+			console.log(response);
+            //this.res.message = response.json().Messages[0].Message;
+              
+            return response;
+            
+		});
 	}
 	send(): Observable<any> {
+		console.log(this.prospects);
+		
 			let newId = String(Math.round(Math.random() * 10000));
 			let opportunityId = String(Math.round(Math.random() * 10000));
 			let uniqueId = String(Math.round(Math.random() * 10000));
@@ -45,44 +194,88 @@ export class SubmitProspectService {
 
 	        this.creds = {
 		    "Opportunity":{
-				"IsDefault":true,
-				"OpportunityId":newId,
-				"ProspectId":opportunityId
+				"Campaign": this.campaign
+				// "IsDefault":true,
+				// "OpportunityId":newId,
+				// "ProspectId":opportunityId
 			},
+			"CustomFieldValues":[
+				{
+					"FieldName":"gradYear",
+					"Value": this.prospects[0].gradYear
+				},
+				{
+					"FieldName":"highSchool",
+					"Value": this.prospects[0].highSchool
+				},
+				{
+					"FieldName":"instagram",
+					"Value": this.prospects[0].instagram
+				},
+				{
+					"FieldName":"okToText",
+					"Value": this.prospects[0].okToText
+				},
+				{
+					"FieldName":"instagram",
+					"Value": this.prospects[0].instagram
+				},
+				{
+					"FieldName":"parentName",
+					"Value": this.prospects[0].parentName
+				},
+				{
+					"FieldName":"parentPhone",
+					"Value": this.prospects[0].parentPhone
+				},
+				{
+					"FieldName":"recruiterName",
+					"Value": this.prospects[0].recruiterName
+				},
+				{
+					"FieldName":"recruiterNotes",
+					"Value": this.prospects[0].recruiterNotes
+				},
+				{
+					"FieldName":"degree",
+					"Value":this.prospects[0].degree
+				}
+			],
 			"Prospect":{
-				"Address": randomAddressNumber + " Fake St.",
-				"Address2": randomAddressNumber + " Fake St.",
-				"City":"Nashville",
-				"Country":"USA",
-				"CountryOfCitizenship":"USA",
-				"County":"Davidson",
+				"Address": this.prospects[0].address1,
+				"Address2": this.prospects[0].address2,
+				"City":this.prospects[0].city,
+				// "Country":"USA",
+				// "CountryOfCitizenship":"USA",
+				// "County":"Davidson",
 				"DoNotCallIndicator":true,
 				"DoNotEmailIndicator":true,
 				"EmailAddress":this.prospects[0].emailAddress,
 				"FirstName":this.prospects[0].firstName,
 				"Gender":"female",
-				"HispanicOfAnyRace":true,
-				"HomePhoneNumber":"1615654" + randomPhone3,
+				// "HispanicOfAnyRace":true,
+				"HomePhoneNumber":this.prospects[0].firstName,
 				"Id": randomId,
 				"LastName":this.prospects[0].lastName,
-				"MobilePhoneNumber":"1615654" + randomPhone2,
-				"PostalCode":"37216",
-				"Prefix":"ms.",
-				"State":"tn",
-				"UniqueId":uniqueId,
-				"WorkPhoneNumber":"1615654" + randomPhone1
+				// "MobilePhoneNumber":"1615654" + randomPhone2,
+				"PostalCode":this.prospects[0].zip,
+				// "Prefix":"ms.",
+				"State":this.prospects[0].state,
+				"UniqueId":this.prospects[0].uniqueID,
+				// "WorkPhoneNumber":"1615654" + randomPhone1
 			}
 		}
         //this.body = JSON.stringify(this.creds);
         this.body = this.creds;
-        return this.http.post('http://topx.topschoolstage.com/Recruitment/prospects', this.body, {headers: this.headers})
+        return this.http.post('http://topx.topschoollive.com/Recruitment/prospects', this.body, {headers: this.headers})
         .map((response: Response) => {
-
-            this.res.message = response.json().Messages[0].Message;
+			console.log(response);
+            //this.res.message = response.json().Messages[0].Message;
               
-            return this.res;
+            return response;
             
-        });
+		});
+		
     }
 }
 

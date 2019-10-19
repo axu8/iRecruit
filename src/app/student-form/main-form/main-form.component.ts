@@ -328,7 +328,8 @@ export class MainFormComponent implements OnInit {
 					let recruiterObject = { "recuiterNotes": data };
 					let degreeObject = {"degree": this.slideThreeForm.value};
 					let uniqueID = {"uniqueID": this.createID()};
-					let finalForm = Object.assign(recruiterObject, this.slideOneForm.value, this.slideTwoForm.value, degreeObject, userObject, uniqueID, this.slideFourForm.value);
+					let createdDateTime = {"createdDateTime": '\/Date(' + new Date().getTime() + ')\/'};
+					let finalForm = Object.assign(recruiterObject, this.slideOneForm.value, this.slideTwoForm.value, degreeObject, userObject, uniqueID, createdDateTime, this.slideFourForm.value);
 					console.log(finalForm);
 					this.recruiterNotes = data;
 					this.storageService.setNewProspect(finalForm);
@@ -354,7 +355,32 @@ export class MainFormComponent implements OnInit {
 		await alert.present();
 	}
 	createID(){
- 
+		var date = new Date();
+		var components = [
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate(),
+			// date.getSeconds(),
+			//date.getMilliseconds()
+		];
+
+		var id = components.join("");
+		id = id.substr(2);
+		
+		console.log(id);
+
+		function randomNo(n){
+			var num = "";
+			for(var i=0; i < n; i++){
+			num += String(Math.floor(Math.random()*10))
+
+			}
+			return num;
+		}
+		id = id + randomNo(10-id.length);
+		console.log("ID is " + id);
+		return id;
+ 		/*
 		var id = 'xxxxxxxx'.replace(/[x]/g, function(c) {
 			//var r = (dt + Math.random()*16)%16 | 0;
 			//dt = Math.floor(dt/16);
@@ -364,6 +390,9 @@ export class MainFormComponent implements OnInit {
 		});
 	 
 		return new Date().getTime().toString() + id;
+		//return new Date().getTime().toString().slice(5);
+		*/
+		
 	}
 	ngOnInit() {
 		this.slides.isBeginning().then(data => {

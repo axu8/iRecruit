@@ -3,6 +3,7 @@ import { Data } from '../providers/data';
 import { StorageService } from '../providers/storage-service';
 import { ModalController } from '@ionic/angular';
 import { ProspectDetailsComponent } from './prospect-details/prospect-details.component';
+import { TestingCompiler } from '@angular/core/testing/src/test_compiler';
 
 @Component({
   selector: 'app-recruit1',
@@ -19,7 +20,6 @@ export class Recruit1Page implements OnInit {
   ) {
     this.storageService.prospectData.subscribe((data) => {
       this.prospects = data;
-      console.log(this.prospects);
     });
     /*
     storageService.getAllProspects().then(p => {
@@ -40,7 +40,7 @@ export class Recruit1Page implements OnInit {
     */
 		//console.log(prospect);
 		//this.prospects = data;
-	}
+  }
   async presentProspectDetailsModal(pID) {
 
     let selectedProspect = this.prospects.filter(p => {
