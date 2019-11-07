@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { WordpressService  } from './providers/wordpress.service';
 import { Router } from '@angular/router';
+import { StorageService } from './providers/storage-service';
+import { LoginComponent } from './login/login.component';
+import { PinpadComponent } from './student-form/pinpad/pinpad.component';
+
 
 @Component({
   selector: 'app-root',
@@ -13,6 +17,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
 
   recruiterLoggedIn = false;
+  globalPath: string;
 
   public sideMenuPages = [
     {
@@ -72,7 +77,9 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private wp: WordpressService,
-    public router: Router
+    public router: Router,
+    public storageService: StorageService,
+    public modalController: ModalController
   ) {
     this.retrievePages();
     this.initializeApp();
@@ -93,6 +100,57 @@ export class AppComponent {
   }
   showDegreePage(pageID,gallery,curriculum){
     this.router.navigate(['students/degree-page', pageID, gallery, curriculum]);
+  }
+  async presentModal(path) {
+    
+    const modal = await this.modalController.create({
+      backdropDismiss: false,
+      component: LoginComponent,
+      componentProps: {
+        'path': path
+      }
+    });
+    return await modal.present();
+  }
+  async presentPinpadModal(path) {
+    this.globalPath = path;
+    const modal = await this.modalController.create({
+      component: PinpadComponent,
+      componentProps: {
+        'path': path
+      }
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      console.log(dataReturned);
+      if (dataReturned.data == true ) {
+        this.router.navigate([this.globalPath]);
+        //this.dataReturned = dataReturned.data;
+        //alert('Modal Sent Data :'+ dataReturned);
+      }
+    });
+    return await modal.present();
+  }
+  checkLoginAndGoto(path, mode){
+    if( mode == 'student'){
+      this.storageService.getCampaign().then( result => {
+        
+        if (result == null){
+          this.presentModal(path);
+        } else {
+          this.router.navigate([path]);
+        }
+      });
+    } else if( mode == 'recruiter'){
+      this.storageService.getUserToken().then( result => {
+        
+        if (result == null){
+          this.presentModal(path);
+        } else {
+          this.presentPinpadModal(path);
+          this.globalPath = path;
+        }
+      });
+    }
   }
   initializeApp() {
     this.platform.ready().then(() => {

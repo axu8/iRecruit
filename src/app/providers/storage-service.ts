@@ -16,10 +16,9 @@ export class StorageService {
 	tokenVal: string;
   newProspectsArray: Array<any> = [];
   newProspect: any;
+  prospectReportsArray: any;
+  prospectReports: any;
   public prospectData: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  public user: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  public campaign: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-
 
   constructor(public http: HttpClient, public storage: Storage) {
     //console.log('Hello StoreProspect Service Provider');
@@ -49,6 +48,37 @@ export class StorageService {
   }
   getUserPass(){
   	return this.storage.get("pass").then(val => val);
+  }
+  clearNewProspects(){
+  	return this.storage.set("newProspects",[]).then(val => val);
+  }
+  storeProspectReports(nr){
+    this.storage.ready().then(() => {
+      this.storage.get("prospectReports").then((theReport) => {
+        if(theReport == null){
+          this.prospectReportsArray = [];
+          this.prospectReportsArray.push(nr);
+          this.storage.set("prospectReports", this.prospectReportsArray).then(() => {
+            this.prospectReportsArray = [];
+            // this.storage.get("prospectReports").then((pr) => {
+            //   this.prospectData.next(pr);
+            //   console.log(pr);
+            // });
+          });
+        } else {
+          this.prospectReportsArray = theReport;
+          this.prospectReportsArray.push(nr)
+          this.storage.set("prospectReports",this.prospectReportsArray).then(() => {
+            this.prospectReportsArray = [];
+            // this.storage.get("prospectReports").then((data) => {
+            //   this.prospectData.next(data);
+            //   console.log(data);
+            // });
+          });
+         }
+      });
+    });
+
   }
   
   // getUserToken(){

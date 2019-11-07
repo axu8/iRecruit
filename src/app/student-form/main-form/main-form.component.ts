@@ -40,6 +40,8 @@ export class MainFormComponent implements OnInit {
 	public slideTwoForm: FormGroup;
 	public slideThreeForm: FormGroup;
 	public slideFourForm: FormGroup;
+	public studentPhoneForm: FormGroup;
+	public paretnPhoneForm: FormGroup;
 	// public slideFiveForm: FormGroup;
 	public submitAttempt: boolean = false;
 	degreeType = "bga";
@@ -48,6 +50,7 @@ export class MainFormComponent implements OnInit {
 	slideBeginning;
 	slideEnd;
 	recruiterNotes;
+	
 
   // @ViewChild(IonSlides) slides: IonSlides;
   @ViewChild('slides') slides;
@@ -91,11 +94,33 @@ export class MainFormComponent implements OnInit {
 		])),
 		studentPhone: this.formBuilder.control(null, Validators.compose([
 			Validators.required,
-			Validators.minLength(10)
+			Validators.minLength(13),
+			Validators.maxLength(13)
 		])),
 		okToText: this.formBuilder.control(true, Validators.required),
         //okToText:[''] yourControl: [0, Vaidators.required]
-    });
+	});
+	// this.studentPhoneForm = formBuilder.group({
+	// 	areaCode: this.formBuilder.control(null, Validators.compose([
+	// 		Validators.required,
+	// 		Validators.minLength(3),
+	// 		Validators.maxLength(3),
+	// 		Validators.pattern('^[0-9]*$')
+	// 	])),
+	// 	firstThree: this.formBuilder.control(null, Validators.compose([
+	// 		Validators.required,
+	// 		Validators.minLength(3),
+	// 		Validators.maxLength(3),
+	// 		Validators.pattern('^[0-9]*$')
+	// 	])),
+	// 	lastFour: this.formBuilder.control(null, Validators.compose([
+	// 		Validators.required,
+	// 		Validators.minLength(4),
+	// 		Validators.maxLength(4),
+	// 		Validators.pattern('^[0-9]*$')
+	// 	])),
+		
+    // });
     this.slideTwoForm = formBuilder.group({
       address1: this.formBuilder.control(null, Validators.required),
       address2: this.formBuilder.control(null),
@@ -139,6 +164,35 @@ export class MainFormComponent implements OnInit {
 // 		return false;
 // 	  }
 //   }
+onInputEntry(event, nextInput) {
+    let input = event.target;
+    let length = input.value.length;
+    let maxLength = input.attributes.maxlength.value;
+
+    if (length >= maxLength) {
+      nextInput.focus();
+    }
+}
+formatNumber(event, numberField, numberFieldValue) {
+
+    let input = numberField;
+    let length = numberField.value.length;
+
+	if(length == 3 ){
+		if( input.value.charAt(0)!="(" && input.value.charAt(0)!=")" ){
+			input.value = "(" + input.value + ")";
+		}
+		
+	} else if(length == 9 && !input.value.match('-') && input.value.charAt(9)!="-" ){
+		let ninthChar = input.value.charAt(8);
+		input.value = input.value.slice(0,-1) + "-" + ninthChar;
+	}
+
+	input.value = input.value.replace(/\s/g,'');
+    // if (length >= maxLength) {
+    //   nextInput.focus();
+    // }
+}
   slideToNext() {
 		//this.slider.getSlider().slideNext(); // also not working
 		this.slides.lockSwipes(false);
@@ -339,6 +393,38 @@ export class MainFormComponent implements OnInit {
 						'Return to Student Apply Form',
 						() => {
 							console.log(this.recruiterNotes);
+							this.slideOneForm.reset();
+							this.slideTwoForm.reset();
+							this.slideThreeForm.reset();
+							this.slideFourForm.reset();
+							this.slideOneForm = this.formBuilder.group({
+								firstName: this.formBuilder.control(null, Validators.required),
+								lastName: this.formBuilder.control(null, Validators.required),
+								emailAddress: this.formBuilder.control(null, Validators.compose([
+									Validators.required,
+									Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+								])),
+								studentPhone: this.formBuilder.control(null, Validators.compose([
+									Validators.required,
+									Validators.minLength(10)
+								])),
+								okToText: this.formBuilder.control(true, Validators.required),
+								//okToText:[''] yourControl: [0, Vaidators.required]
+							});
+
+							//this.slider.getSlider().slideNext(); // also not working
+							this.slides.lockSwipes(false);
+							this.slides.slideTo(0);
+							this.content.scrollToTop(0);
+							this.slides.lockSwipes(true);
+							//console.log( this.slides.nativeElement.isBeginning() );
+							this.slides.isBeginning().then(data => {
+								this.slideBeginning = data;
+							});
+							this.slides.isEnd().then(data => {
+								this.slideEnd = data;
+							});
+							console.log(this.slideEnd, this.slideBeginning);
 							//this.modalCtrl.dismiss(data);
 							/*this.storageService.setRecruiterNotes(data).then( result => {
 							

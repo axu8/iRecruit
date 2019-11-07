@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../providers/storage-service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { SubmitProspectService } from '../providers/submit-prospect-service';
 import { Observable, from } from 'rxjs';
 import { debug } from 'util';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-recruit3',
@@ -15,16 +17,21 @@ export class Recruit3Page implements OnInit {
   message = '';
   messages:any = [];
   prospects: any = [];
+  notSubmittedProspectsList: any = [];
+  completedProspectsList: any = [];
   prospectsConstuctor: any = [];
   prospectsOnInit: any = [];
   loading;
   submissionDone = false;
   progress:any;
+  submitTimer: any;
   constructor(
     public storageService: StorageService,
     public spService: SubmitProspectService,
     public loadingController: LoadingController,
-    public toastController: ToastController
+    public toastController: ToastController,
+    public alertController: AlertController,
+    public router: Router
   ) {
     // this.storageService.prospectData.subscribe((data) => {
     //   this.prospectsConstuctor = data;
@@ -40,7 +47,8 @@ export class Recruit3Page implements OnInit {
   ionViewDidEnter(){
     this.storageService.getAllProspects().then(p => {
       this.prospects = p;
-      console.log(this.prospects);
+      this.notSubmittedProspectsList = p;
+      //console.log(this.prospects);
     });
   }
   
@@ -75,12 +83,16 @@ export class Recruit3Page implements OnInit {
           // icon: 'star',
           text: 'Clear And Refresh',
           handler: () => {
-            console.log('Refresh clicked');
+            //this.router.navigate(['/recruiters/show-prospects']);
+            this.clearPage();
+            this.storageService.clearNewProspects();
           }
         }, {
           text: 'Save Report',
           role: 'cancel',
           handler: () => {
+            //this.router.navigate(['/recruiters/show-prospects']);
+            this.storageService.storeProspectReports(this.messages);
             console.log('Cancel clicked');
           }
         }
@@ -89,6 +101,85 @@ export class Recruit3Page implements OnInit {
     toast.present();
   }
 
+  clearPage(){
+    this.message = '';
+    this.messages = [];
+    this.prospects = [];
+    this.notSubmittedProspectsList = [];
+    this.loading = null;
+    this.submissionDone = false;
+    this.progress = null;
+  }
+
+  checkMessages(){
+    console.log(this.messages);
+  }
+
+  sendProspectsLoop(i){
+    // this.submitTimer = setTimeout(() => {
+
+    // }, 10000);
+    let currentProspect = {
+      prospectNo: null,
+      message: null,
+      status: null,
+      prospectData: null
+    }
+    this.message = 'Sending Prospect ' + String(i+1) + ' of ' + String(this.prospects.length) + '\r\n';
+
+    this.submissionDone = true;
+    console.log(this.prospects);
+    this.spService.submit(this.prospects, i).then(result => {
+      //console.log(result);
+      this.progress = (i+1) / (this.prospects.length);
+      //this.presentLoading('Sending Prospect ' + String(i+1) + ' of ' + String(this.prospects.length) );
+      result.subscribe(p => {
+        i++;
+        if( p.Status == 2 ){
+          this.completedProspectsList.push(this.notSubmittedProspectsList.splice(i,1));
+        }
+        currentProspect.message = p.Messages[0].Message;
+        currentProspect.prospectNo = i;
+        currentProspect.status = p.Status;
+        currentProspect.prospectData = this.prospects[i];
+        console.log(currentProspect);
+        this.messages.push(currentProspect);
+        // this.messages.push(
+        //   {
+        //     prospectNo: i,
+        //     message: p.Messages[0].Message,
+        //     status: p.Status,
+        //     prospectData: this.prospects[i]
+        //   }
+        // );
+        //this.progress = this.prospects.length / this.messages.length;
+
+        // debugger;
+        if( (i+1) === this.prospects.length){
+          this.presentToast();
+          this.message = "Submissions Report";
+          console.log(this.messages);
+          // this.submissionDone = true;
+        } else if ( (i+1) < this.prospects.length ){
+          this.sendProspectsLoop(i);
+        }
+        
+        // this.loading.dismiss();
+        // if(p.status === true){
+        //    this.message += p.message + '\r\n';
+        //   console.log(p);
+        // } else {
+        //   this.message += p.message + '\r\n';
+        //   console.log(p);
+        // }
+      },
+      err => {
+        i++;
+        this.sendProspectsLoop(i);
+        console.log();
+      });
+    });
+  }
 
   sendProspects(){
     this.submissionDone = true;
@@ -100,33 +191,61 @@ export class Recruit3Page implements OnInit {
         //console.log(result);
         this.message = 'Sending Prospect ' + String(i+1) + ' of ' + String(this.prospects.length) + '\r\n';
         this.progress = (i+1) / (this.prospects.length);
-        //this.presentLoading('Sending Prospect ' + String(i+1) + ' of ' + String(this.prospects.length) );
-        await result.subscribe(p => {
-          this.messages.push(
-            {
-              prospectNo: i,
-              message: p.Messages[0].Message,
-              status: p.Status,
-              prospectData: this.prospects[i]
-            }
-          );
-
-          //debugger;
-          if( (i+1) === this.prospects.length){
-            this.presentToast();
-            this.message = "Submissions Report";
-            // this.submissionDone = true;
-          }
+        
+        this.messages.push(
+          {
+            prospectNo: i,
+            prospectData: this.prospects[i],
+            message: result.subscribe(p => p).toPromise().then(p => {
           
-          // this.loading.dismiss();
-          // if(p.status === true){
-          //    this.message += p.message + '\r\n';
-          //   console.log(p);
-          // } else {
-          //   this.message += p.message + '\r\n';
-          //   console.log(p);
-          // }
-        });
+              console.log(this.messages, p);
+              return p.Messages[0].Message;
+            }),
+            status: result.subscribe(p => p, err => err).toPromise().then(p => {
+          
+              console.log(this.messages, p);
+              return p.Status;
+            }),
+          }
+        );
+        console.log(this.messages, result);
+        // await result.subscribe(p => p).toPromise().then(p => {
+          
+        //   console.log(this.messages, p);
+        //   return p.Messages[0].Message;
+        // });
+        //this.presentLoading('Sending Prospect ' + String(i+1) + ' of ' + String(this.prospects.length) );
+        // await result.subscribe(async p => {
+        //   if( p.Status == 2 ){
+        //     this.notSubmittedProspectsList.splice(i,1);
+        //   }
+        //   await this.messages.push(
+        //     {
+        //       prospectNo: i,
+        //       message: p.Messages[0].Message,
+        //       status: p.Status,
+        //       prospectData: this.prospects[i]
+        //     }
+        //   );
+        //   console.log(this.messages);
+
+        //   //debugger;
+        //   if( (i+1) === this.prospects.length){
+        //     this.presentToast();
+        //     this.message = "Submissions Report";
+        //     console.log(this.messages);
+        //     // this.submissionDone = true;
+        //   }
+          
+        //   // this.loading.dismiss();
+        //   // if(p.status === true){
+        //   //    this.message += p.message + '\r\n';
+        //   //   console.log(p);
+        //   // } else {
+        //   //   this.message += p.message + '\r\n';
+        //   //   console.log(p);
+        //   // }
+        // });
       });
     });
     
@@ -158,3 +277,7 @@ export class Recruit3Page implements OnInit {
   //   });
   // }
 }
+
+
+
+

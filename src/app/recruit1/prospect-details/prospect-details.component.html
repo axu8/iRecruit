@@ -1,5 +1,13 @@
+<ion-toolbar color="primary">
+  <ion-buttons slot="end">
+    <ion-button (click)="close()">
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <ion-title>{{ prospect.firstName }} {{ prospect.lastName }} - Details</ion-title>
+</ion-toolbar>
 <ion-content>
-   <h1>{{ prospect.firstName }} {{ prospect.lastName }}<!-- - {{ prospectID }} --></h1>
+   <!-- <h1>{{ prospect.firstName }} {{ prospect.lastName }}</h1> -->
   <ion-list>
     <ion-item>
       <ion-label>First Name: {{ prospect.firstName }}</ion-label>

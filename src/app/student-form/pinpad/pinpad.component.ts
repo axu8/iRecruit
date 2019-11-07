@@ -28,6 +28,10 @@ export class PinpadComponent implements OnInit {
     this.modalCtrl = modalCtrl;
   }
 
+  close(){
+    this.modalCtrl.dismiss();
+  }
+
   emitEvent() {
     this.change.emit(this.pin);
   }

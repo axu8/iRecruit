@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavParams } from '@ionic/angular';
 import { StorageService } from 'src/app/providers/storage-service';
+import { ModalController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-prospect-details',
@@ -11,7 +15,11 @@ export class ProspectDetailsComponent implements OnInit {
   //prospects:any = [];
   prospect;
   prospectID;
+  navCtrl: NavController;
   constructor(
+    public router: Router,
+    public modalCtrl:ModalController,
+    navCtrl: NavController,
     navParams: NavParams,
     public storageService: StorageService
   ){
@@ -33,7 +41,11 @@ export class ProspectDetailsComponent implements OnInit {
     // componentProps can also be accessed at construction time using NavParams
     // console.log(navParams.get('firstName')
   }
-
+  close(){
+    //this.router.navigate(['recruiters/show-prospects']);
+    // this.navCtrl.back();
+    this.modalCtrl.dismiss();
+  }
   ngOnInit() {}
 
 }

@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Data } from './data';
-import { map } from "rxjs/operators";
+import { map, timeout, catchError, finalize } from "rxjs/operators";
 import { StorageService } from './storage-service';
+import { throwError, TimeoutError } from 'rxjs';
 
 /*
   Generated class for the SubmitProspectService provider.
@@ -21,6 +22,12 @@ export class SubmitProspectService {
 	};
 	campaign;
 	token: any;
+	notes:any = {
+		degree: null,
+		instagram: null,
+		parentName: null,
+		parentPhone: null 
+	};
 	ngOnInit() {
 		// this.storage.getUserToken().then(t => {
 		//   this.token = t;
@@ -93,6 +100,11 @@ export class SubmitProspectService {
 
 		
 		console.log(this.headers, this.token);
+		this.notes.degree = pr[n].degree;
+		this.notes.instagram = pr[n].instagram;
+		this.notes.parentName = pr[n].parentName;
+		this.notes.parentPhone = pr[n].parentPhone;
+
 		this.creds = {
 		    "Opportunity":{
 				"Campaign": this.campaign,
@@ -101,48 +113,56 @@ export class SubmitProspectService {
 				"ProspectId":pr[n].uniqueID
 				// "LeadProvider": JSON.stringify(pr[n]),
 			},
-			// "CustomFieldValues":[
-			// 	{
-			// 		"FieldName":"gradYear",
-			// 		"Value": pr[n].gradYear
-			// 	},
-			// 	{
-			// 		"FieldName":"highSchool",
-			// 		"Value": pr[n].highSchool
-			// 	},
-			// 	{
-			// 		"FieldName":"instagram",
-			// 		"Value": pr[n].instagram
-			// 	},
-			// 	{
-			// 		"FieldName":"okToText",
-			// 		"Value": pr[n].okToText
-			// 	},
-			// 	{
-			// 		"FieldName":"instagram",
-			// 		"Value": pr[n].instagram
-			// 	},
-			// 	{
-			// 		"FieldName":"parentName",
-			// 		"Value": pr[n].parentName
-			// 	},
-			// 	{
-			// 		"FieldName":"parentPhone",
-			// 		"Value": pr[n].parentPhone
-			// 	},
-			// 	{
-			// 		"FieldName":"recruiterName",
-			// 		"Value": pr[n].recruiterName
-			// 	},
-			// 	{
-			// 		"FieldName":"recruiterNotes",
-			// 		"Value": pr[n].recruiterNotes
-			// 	},
-			// 	{
-			// 		"FieldName":"degree",
-			// 		"Value":pr[n].degree
-			// 	}
-			// ],
+			"CustomFieldValues":[
+				{
+					"FieldName":"Notes",
+					"Value": JSON.stringify(this.notes)
+				},
+				{
+					"FieldName":"HSGradDate",
+					"Value": String(pr[n].gradYear)
+				},
+				{
+					"FieldName":"HSGraduationDate",
+					"Value": String(pr[n].gradYear)
+				},
+				{
+					"FieldName":"High School Name",
+					"Value": pr[n].highSchool
+				},
+				{
+					"FieldName":"Okay to Text",
+					"Value": pr[n].okToText ? "Yes":"No"
+				},
+				// {
+				// 	"FieldName":"instagram",
+				// 	"Value": pr[n].instagram
+				// },
+				// {
+				// 	"FieldName":"instagram",
+				// 	"Value": pr[n].instagram
+				// },
+				// {
+				// 	"FieldName":"parentName",
+				// 	"Value": pr[n].parentName
+				// },
+				// {
+				// 	"FieldName":"parentPhone",
+				// 	"Value": pr[n].parentPhone
+				// },
+				// {
+				// 	"FieldName":"recruiterName",
+				// 	"Value": pr[n].recruiterName
+				// },
+				// {
+				// 	"FieldName":"recruiterNotes",
+				// 	"Value": pr[n].recruiterNotes
+				// },
+				// {
+				// 	"FieldName":"degree",
+				// 	"Value":pr[n].degree
+				// }
+			],
 			"Prospect":{
 				"Address": pr[n].address1,
 				"Address2": pr[n].address2,
@@ -157,10 +177,10 @@ export class SubmitProspectService {
 				"FirstName":pr[n].firstName,
 				// "Gender":"female",
 				//"HispanicOfAnyRace":"",
-				"HomePhoneNumber":pr[n].firstName,
+				"HomePhoneNumber":pr[n].parentPhone,
 				"Id": pr[n].uniqueID,
 				"LastName":pr[n].lastName,
-				//"MobilePhoneNumber":"",
+				"MobilePhoneNumber":pr[n].studentPhone,
 				"PostalCode":pr[n].zip,
 				//"Prefix":"",
 				"State":pr[n].state,
@@ -170,14 +190,32 @@ export class SubmitProspectService {
 		}
 		this.body = JSON.stringify(this.creds);
 		console.log(this.body);
-        return this.http.post('http://topx.topschoollive.com/Recruitment/prospects', this.body, {headers: this.headers})
-        .map((response: Response) => {
-			console.log(response);
-            //this.res.message = response.json().Messages[0].Message;
+        // return this.http.post('http://topx.topschoollive.com/Recruitment/prospects', this.body, {headers: this.headers})
+        // .map((response: Response) => {
+		// 	console.log(response);
+        //     //this.res.message = response.json().Messages[0].Message;
               
-            return response;
+        //     return response;
             
-		});
+		// });
+		return this.http.post('http://topx.topschoollive.com/Recruitment/prospects', this.body, {headers: this.headers})
+        .pipe(
+            timeout(10000),
+            map((response: any) => { // Success...
+              return response;
+            }),
+            catchError((error) => { // Error...
+              // Timeout over also handled here
+			  // I want to return an error for timeout
+			  if(error instanceof TimeoutError){
+				return throwError('Timeout Exception');
+			  }
+              return throwError(error || 'Timeout Exception');
+            }),
+            finalize(() => {
+              console.log('Request it is over');
+            })
+        );
 	}
 	send(): Observable<any> {
 		console.log(this.prospects);
@@ -248,8 +286,8 @@ export class SubmitProspectService {
 				// "Country":"USA",
 				// "CountryOfCitizenship":"USA",
 				// "County":"Davidson",
-				"DoNotCallIndicator":true,
-				"DoNotEmailIndicator":true,
+				// "DoNotCallIndicator":true,
+				// "DoNotEmailIndicator":true,
 				"EmailAddress":this.prospects[0].emailAddress,
 				"FirstName":this.prospects[0].firstName,
 				"Gender":"female",
