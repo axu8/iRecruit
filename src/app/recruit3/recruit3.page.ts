@@ -84,16 +84,19 @@ export class Recruit3Page implements OnInit {
           text: 'Clear And Refresh',
           handler: () => {
             //this.router.navigate(['/recruiters/show-prospects']);
-            this.clearPage();
             this.storageService.clearNewProspects();
+            this.clearPage();
+            console.log(this.submissionDone, this.prospects);
           }
         }, {
           text: 'Save Report',
-          role: 'cancel',
+          //role: 'cancel',
           handler: () => {
             //this.router.navigate(['/recruiters/show-prospects']);
-            this.storageService.storeProspectReports(this.messages);
-            console.log('Cancel clicked');
+            this.storageService.storeProspectReports([{'messages':this.messages},{'prospects':this.prospects}]);
+            this.storageService.clearNewProspects();
+            this.clearPage();
+            console.log(this.submissionDone, this.prospects);
           }
         }
       ]
@@ -116,6 +119,7 @@ export class Recruit3Page implements OnInit {
   }
 
   sendProspectsLoop(i){
+    console.log(this.prospects);
     // this.submitTimer = setTimeout(() => {
 
     // }, 10000);
@@ -125,16 +129,17 @@ export class Recruit3Page implements OnInit {
       status: null,
       prospectData: null
     }
-    this.message = 'Sending Prospect ' + String(i+1) + ' of ' + String(this.prospects.length) + '\r\n';
+    this.message = 'Sending Prospect ' + String(i) + ' of ' + String(this.prospects.length) + '\r\n';
 
     this.submissionDone = true;
-    console.log(this.prospects);
+    //console.log(this.prospects);
     this.spService.submit(this.prospects, i).then(result => {
       //console.log(result);
-      this.progress = (i+1) / (this.prospects.length);
+      //this.progress = (i+1) / (this.prospects.length);
       //this.presentLoading('Sending Prospect ' + String(i+1) + ' of ' + String(this.prospects.length) );
       result.subscribe(p => {
-        i++;
+        
+        // this.progress = (i+1) / (this.prospects.length);
         if( p.Status == 2 ){
           this.completedProspectsList.push(this.notSubmittedProspectsList.splice(i,1));
         }
@@ -142,8 +147,9 @@ export class Recruit3Page implements OnInit {
         currentProspect.prospectNo = i;
         currentProspect.status = p.Status;
         currentProspect.prospectData = this.prospects[i];
-        console.log(currentProspect);
+        // console.log(currentProspect);
         this.messages.push(currentProspect);
+        console.log(currentProspect, this.messages);
         // this.messages.push(
         //   {
         //     prospectNo: i,
@@ -155,12 +161,19 @@ export class Recruit3Page implements OnInit {
         //this.progress = this.prospects.length / this.messages.length;
 
         // debugger;
-        if( (i+1) === this.prospects.length){
+        console.log("before i",this.progress,this.prospects.length,i);
+        //i++;
+        console.log("after i",this.progress,this.prospects.length,i);
+        this.progress = (i) / (this.prospects.length);
+        if( i == this.prospects.length){
           this.presentToast();
           this.message = "Submissions Report";
-          console.log(this.messages);
+          //console.log(this.messages);
+          //this.sendProspectsLoop(i);
           // this.submissionDone = true;
-        } else if ( (i+1) < this.prospects.length ){
+        } else if ( i < this.prospects.length ){
+          i++;
+          console.log("after i",this.progress,this.prospects.length,i);
           this.sendProspectsLoop(i);
         }
         
@@ -174,9 +187,29 @@ export class Recruit3Page implements OnInit {
         // }
       },
       err => {
-        i++;
+        //i++;
+        if( err.Status == 2 ){
+          this.completedProspectsList.push(this.notSubmittedProspectsList.splice(i,1));
+        }
+        currentProspect.message = err.Messages[0].Message;
+        currentProspect.prospectNo = i;
+        currentProspect.status = err.Status;
+        currentProspect.prospectData = this.prospects[i];
+        console.log(currentProspect);
+        this.messages.push(currentProspect);
         this.sendProspectsLoop(i);
-        console.log();
+        
+        i++;
+        console.log("after i",this.progress,this.prospects.length,i);
+        this.progress = (i) / (this.prospects.length);
+        if( i === this.prospects.length){
+          this.presentToast();
+          this.message = "Submissions Report";
+          console.log(this.messages);
+          // this.submissionDone = true;
+        } else if ( i < this.prospects.length ){
+          this.sendProspectsLoop(i);
+        }
       });
     });
   }

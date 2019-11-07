@@ -100,10 +100,10 @@ export class SubmitProspectService {
 
 		
 		console.log(this.headers, this.token);
-		this.notes.degree = pr[n].degree;
-		this.notes.instagram = pr[n].instagram;
-		this.notes.parentName = pr[n].parentName;
-		this.notes.parentPhone = pr[n].parentPhone;
+		// this.notes.degree = pr[n]['degree'];
+		// this.notes.instagram = pr[n]['instagram'];
+		// this.notes.parentName = pr[n]['parentName'];
+		// this.notes.parentPhone = pr[n]['parentPhone'];
 
 		this.creds = {
 		    "Opportunity":{
@@ -114,10 +114,10 @@ export class SubmitProspectService {
 				// "LeadProvider": JSON.stringify(pr[n]),
 			},
 			"CustomFieldValues":[
-				{
-					"FieldName":"Notes",
-					"Value": JSON.stringify(this.notes)
-				},
+				// {
+				// 	"FieldName":"Notes",
+				// 	"Value": JSON.stringify(this.notes)
+				// },
 				{
 					"FieldName":"HSGradDate",
 					"Value": String(pr[n].gradYear)

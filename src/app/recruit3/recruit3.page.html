@@ -10,13 +10,13 @@
   </ion-header>
 
 <ion-content padding>
-  <h1 (click)="checkMessages()">Submit All Prospects</h1>
+  <h1>Submit All Prospects</h1>
   <ion-badge style="color: white;" color="warning" *ngIf="notSubmittedProspectsList.length == 0">You have no prospects to submit.</ion-badge>
   <ion-badge style="color: white;" color="secondary" *ngIf="notSubmittedProspectsList.length > 0">You have {{ prospects.length }} unsubmitted Prospect<span *ngIf="prospects.length > 1">s</span></ion-badge>
   <ion-button [disabled]="submissionDone || prospects.length == 0" (click)="sendProspectsLoop(0)" class="white-text" expand="full" color="primary" [disabled]="prospects.length == 0">Submit Now</ion-button>
   <p *ngIf="message">{{ message }}</p>
   <ion-progress-bar *ngIf="progress" color="primary" value="{{progress}}"></ion-progress-bar>
-  <ion-list *ngIf="messages">
+  <ion-list *ngIf="messages != null || messages != []">
     <ion-item lines="none" *ngFor="let m of messages">
       <ion-label class="ion-text-wrap" [color]="m.status == 2 ? 'secondary' : 'danger'">
         <ion-text>

@@ -50,7 +50,11 @@ export class StorageService {
   	return this.storage.get("pass").then(val => val);
   }
   clearNewProspects(){
-  	return this.storage.set("newProspects",[]).then(val => val);
+    //return this.storage.set("newProspects",[]).then(val => val);
+    return this.storage.ready().then(() => {
+      return this.storage.set("newProspects",[]).then(val => val);
+    });
+    //return this.storage.remove("newProspects").then(val => val);
   }
   storeProspectReports(nr){
     this.storage.ready().then(() => {
